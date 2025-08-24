@@ -8,6 +8,15 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Source+Code+Pro:wght@400;600;700&display=swap');
         
+        /* Responsive Design */
+        * {
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            overflow-x: hidden;
+        }
+        
         .matrix-bg {
             position: fixed;
             top: 0;
@@ -54,6 +63,44 @@
             50% { transform: translateY(-10px) rotateZ(2deg); }
         }
         
+        /* Responsive Header Styles */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 3rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .main-header p {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .main-header p:last-child {
+                font-size: 0.875rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-header {
+                margin-bottom: 2rem !important;
+                padding: 0 1rem;
+            }
+            
+            .main-header h1 {
+                font-size: 2.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .main-header p {
+                font-size: 0.875rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            .main-header p:last-child {
+                font-size: 0.75rem !important;
+            }
+        }
+        
         .terminal {
             background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             border: 2px solid #00ff41;
@@ -64,6 +111,59 @@
                 inset 0 0 20px rgba(0, 0, 0, 0.5);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateZ(0);
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .terminal {
+                border-radius: 4px;
+                border-width: 1px;
+                margin: 0 8px;
+            }
+            
+            .terminal-body {
+                padding: 12px !important;
+                min-height: 250px !important;
+                font-size: 14px;
+            }
+            
+            .terminal-header {
+                padding: 6px 12px !important;
+                font-size: 12px;
+            }
+            
+            .dot {
+                width: 8px !important;
+                height: 8px !important;
+            }
+            
+            .command-line {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            
+            .prompt {
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .terminal-body {
+                padding: 8px !important;
+                min-height: 200px !important;
+                font-size: 12px;
+            }
+            
+            .terminal-header {
+                padding: 4px 8px !important;
+                font-size: 10px;
+            }
+            
+            .terminal-header span:last-child {
+                display: none; /* Hide "SECURE CONNECTION" on very small screens */
+            }
         }
         
         .terminal:hover {
@@ -196,12 +296,173 @@
         }
         
         @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            0% { 
+                transform: translate(0); 
+                filter: hue-rotate(0deg) contrast(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+            10% { 
+                transform: translate(-1px, 1px); 
+                filter: hue-rotate(90deg) contrast(1.2);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41;
+            }
+            20% { 
+                transform: translate(-1px, -1px); 
+                filter: hue-rotate(180deg) contrast(0.8);
+                text-shadow: -1px 0 #ff0040, 1px 0 #00ff41;
+            }
+            30% { 
+                transform: translate(1px, 1px); 
+                filter: hue-rotate(270deg) contrast(1.1);
+                text-shadow: 1px 0 #ff0040, -1px 0 #00ff41;
+            }
+            40% { 
+                transform: translate(1px, -1px); 
+                filter: hue-rotate(360deg) contrast(0.9);
+                text-shadow: 0 0 5px #00ff41;
+            }
+            50% { 
+                transform: translate(-1px, 1px); 
+                filter: hue-rotate(45deg) contrast(1.3);
+                text-shadow: 3px 0 #ff0040, -3px 0 #00ff41;
+            }
+            60% { 
+                transform: translate(-1px, -1px); 
+                filter: hue-rotate(135deg) contrast(0.7);
+                text-shadow: -2px 0 #ff0040, 2px 0 #00ff41;
+            }
+            70% { 
+                transform: translate(1px, 1px); 
+                filter: hue-rotate(225deg) contrast(1.4);
+                text-shadow: 1px 0 #ff0040, -1px 0 #00ff41;
+            }
+            80% { 
+                transform: translate(1px, -1px); 
+                filter: hue-rotate(315deg) contrast(0.6);
+                text-shadow: 0 0 8px #00ff41;
+            }
+            90% { 
+                transform: translate(-1px, 1px); 
+                filter: hue-rotate(180deg) contrast(1.1);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41;
+            }
+            100% { 
+                transform: translate(0); 
+                filter: hue-rotate(0deg) contrast(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+        }
+        
+        .subtle-glitch {
+            animation: subtleGlitch 0.4s ease-out;
+        }
+        
+        @keyframes subtleGlitch {
+            0% { 
+                transform: translate(0);
+                filter: contrast(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+            15% { 
+                transform: translate(-0.5px, 0.5px);
+                filter: contrast(1.1);
+                text-shadow: 1px 0 rgba(255, 0, 64, 0.5), -1px 0 rgba(0, 255, 65, 0.5);
+            }
+            30% { 
+                transform: translate(0.5px, -0.5px);
+                filter: contrast(0.9);
+                text-shadow: -0.5px 0 rgba(255, 0, 64, 0.3), 0.5px 0 rgba(0, 255, 65, 0.3);
+            }
+            45% { 
+                transform: translate(-0.3px, 0.3px);
+                filter: contrast(1.05);
+                text-shadow: 0.8px 0 rgba(255, 0, 64, 0.4), -0.8px 0 rgba(0, 255, 65, 0.4);
+            }
+            60% { 
+                transform: translate(0.3px, -0.3px);
+                filter: contrast(0.95);
+                text-shadow: -0.3px 0 rgba(255, 0, 64, 0.2), 0.3px 0 rgba(0, 255, 65, 0.2);
+            }
+            75% { 
+                transform: translate(-0.1px, 0.1px);
+                filter: contrast(1.02);
+                text-shadow: 0.2px 0 rgba(255, 0, 64, 0.1), -0.2px 0 rgba(0, 255, 65, 0.1);
+            }
+            100% { 
+                transform: translate(0);
+                filter: contrast(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+        }
+        
+        .digital-distortion {
+            animation: digitalDistortion 0.6s ease-in-out;
+        }
+        
+        @keyframes digitalDistortion {
+            0% { 
+                transform: scaleX(1) scaleY(1);
+                filter: blur(0px) brightness(1);
+            }
+            20% { 
+                transform: scaleX(1.02) scaleY(0.98);
+                filter: blur(0.5px) brightness(1.2);
+            }
+            40% { 
+                transform: scaleX(0.98) scaleY(1.02);
+                filter: blur(0.3px) brightness(0.8);
+            }
+            60% { 
+                transform: scaleX(1.01) scaleY(0.99);
+                filter: blur(0.2px) brightness(1.1);
+            }
+            80% { 
+                transform: scaleX(0.99) scaleY(1.01);
+                filter: blur(0.1px) brightness(0.9);
+            }
+            100% { 
+                transform: scaleX(1) scaleY(1);
+                filter: blur(0px) brightness(1);
+            }
+        }
+        
+        .screen-tear {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen-tear::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                rgba(255, 0, 64, 0.1) 1px,
+                transparent 2px,
+                rgba(0, 255, 65, 0.1) 3px,
+                transparent 4px
+            );
+            animation: screenTear 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        
+        @keyframes screenTear {
+            0% { 
+                opacity: 0;
+                transform: translateY(0px);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: translateY(-2px);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(0px);
+            }
         }
         
         .error-text {
@@ -226,74 +487,615 @@
             0% { top: 0; opacity: 1; }
             100% { top: 100%; opacity: 0; }
         }
+        
+        /* Startup Loading Screen */
+        .startup-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+        
+        .startup-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .startup-logo {
+            font-size: 4rem;
+            font-family: 'Orbitron', monospace;
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41;
+            margin-bottom: 2rem;
+            animation: startupGlitch 2s ease-in-out;
+        }
+        
+        @keyframes startupGlitch {
+            0% { 
+                transform: scale(0.8) rotateX(0deg);
+                opacity: 0;
+                filter: blur(10px);
+            }
+            20% {
+                transform: scale(1.1) rotateX(5deg);
+                opacity: 0.7;
+                filter: blur(5px);
+            }
+            40% {
+                transform: scale(0.9) rotateX(-3deg);
+                opacity: 0.9;
+                filter: blur(2px);
+            }
+            60% {
+                transform: scale(1.05) rotateX(2deg);
+                opacity: 1;
+                filter: blur(1px);
+            }
+            80% {
+                transform: scale(0.98) rotateX(-1deg);
+                opacity: 1;
+                filter: blur(0px);
+            }
+            100% { 
+                transform: scale(1) rotateX(0deg);
+                opacity: 1;
+                filter: blur(0px);
+            }
+        }
+        
+        .startup-progress {
+            width: 300px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .startup-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff41, #00cc33);
+            width: 0%;
+            animation: progressLoad 3s ease-out forwards;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            20% { width: 15%; }
+            40% { width: 45%; }
+            60% { width: 70%; }
+            80% { width: 90%; }
+            100% { width: 100%; }
+        }
+        
+        .startup-text {
+            color: #00ff41;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: textFadeIn 0.5s ease-out forwards;
+        }
+        
+        .startup-text:nth-child(3) { animation-delay: 0.5s; }
+        .startup-text:nth-child(4) { animation-delay: 1s; }
+        .startup-text:nth-child(5) { animation-delay: 1.5s; }
+        .startup-text:nth-child(6) { animation-delay: 2s; }
+        .startup-text:nth-child(7) { animation-delay: 2.5s; }
+        
+        @keyframes textFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+                filter: blur(5px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+                filter: blur(0px);
+            }
+        }
+        
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.03) 2px,
+                rgba(0, 255, 65, 0.03) 4px
+            );
+            pointer-events: none;
+            animation: scanlines 0.1s linear infinite;
+        }
+        
+        @keyframes scanlines {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(4px); }
+        }
+        
+        .digital-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .rain-char {
+            position: absolute;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            animation: rainFall linear infinite;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        
+        @keyframes rainFall {
+            0% { 
+                transform: translateY(-100vh);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        /* Enhanced main content animations */
+        .main-content {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Terminal Glitch Appearance */
+        .terminal-glitch-appear {
+            opacity: 0;
+            transform: scale(0.8) rotateX(15deg);
+            animation: terminalGlitchAppear 2s ease-out forwards;
+            animation-delay: 4.2s;
+        }
+        
+        @keyframes terminalGlitchAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) rotateX(15deg);
+                filter: blur(20px) hue-rotate(0deg);
+            }
+            15% {
+                opacity: 0.3;
+                transform: scale(1.1) rotateX(-5deg);
+                filter: blur(15px) hue-rotate(90deg);
+            }
+            30% {
+                opacity: 0.6;
+                transform: scale(0.9) rotateX(8deg);
+                filter: blur(10px) hue-rotate(180deg);
+            }
+            45% {
+                opacity: 0.8;
+                transform: scale(1.05) rotateX(-3deg);
+                filter: blur(5px) hue-rotate(270deg);
+            }
+            60% {
+                opacity: 0.9;
+                transform: scale(0.95) rotateX(2deg);
+                filter: blur(3px) hue-rotate(360deg);
+            }
+            75% {
+                opacity: 0.95;
+                transform: scale(1.02) rotateX(-1deg);
+                filter: blur(1px) hue-rotate(45deg);
+            }
+            90% {
+                opacity: 0.98;
+                transform: scale(0.99) rotateX(0.5deg);
+                filter: blur(0.5px) hue-rotate(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotateX(0deg);
+                filter: blur(0px) hue-rotate(0deg);
+            }
+        }
+        
+        /* Text Glitch Appear Animation */
+        .text-glitch-appear {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: textGlitchAppear 1s ease-out forwards;
+        }
+        
+        @keyframes textGlitchAppear {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+                filter: blur(5px);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41;
+            }
+            25% {
+                opacity: 0.4;
+                transform: translateX(5px);
+                filter: blur(3px);
+                text-shadow: 4px 0 #ff0040, -4px 0 #00ff41;
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateX(-2px);
+                filter: blur(2px);
+                text-shadow: 3px 0 #ff0040, -3px 0 #00ff41;
+            }
+            75% {
+                opacity: 0.9;
+                transform: translateX(1px);
+                filter: blur(1px);
+                text-shadow: 1px 0 #ff0040, -1px 0 #00ff41;
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0px);
+                filter: blur(0px);
+                text-shadow: 0 0 10px #00ff41;
+            }
+        }
+        
+        /* Staggered text animations */
+        .text-glitch-appear:nth-child(1) { animation-delay: 6.5s; }
+        .text-glitch-appear:nth-child(2) { animation-delay: 7s; }
+        .text-glitch-appear:nth-child(3) { animation-delay: 7.5s; }
+        .text-glitch-appear:nth-child(4) { animation-delay: 8s; }
+        .text-glitch-appear:nth-child(5) { animation-delay: 8.5s; }
+        
+        /* Terminal content glitch appear */
+        .terminal-content-appear {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: terminalContentAppear 0.8s ease-out forwards;
+        }
+        
+        @keyframes terminalContentAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+                filter: blur(3px);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translateY(5px);
+                filter: blur(1px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0px);
+                filter: blur(0px);
+            }
+        }
+        
+        /* Random glitch effects during appearance */
+        .random-glitch {
+            animation: randomGlitch 0.1s ease-in-out;
+        }
+        
+        @keyframes randomGlitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            25% { transform: translate(-1px, 1px); filter: hue-rotate(90deg); }
+            50% { transform: translate(1px, -1px); filter: hue-rotate(180deg); }
+            75% { transform: translate(-1px, -1px); filter: hue-rotate(270deg); }
+            100% { transform: translate(0); filter: hue-rotate(360deg); }
+        }
+        
+        .enhanced-glitch {
+            animation: enhancedGlitch 0.3s ease-in-out;
+        }
+        
+        @keyframes enhancedGlitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            10% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+            20% { transform: translate(-2px, -2px); filter: hue-rotate(180deg); }
+            30% { transform: translate(2px, 2px); filter: hue-rotate(270deg); }
+            40% { transform: translate(2px, -2px); filter: hue-rotate(360deg); }
+            50% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+            60% { transform: translate(-2px, -2px); filter: hue-rotate(180deg); }
+            70% { transform: translate(2px, 2px); filter: hue-rotate(270deg); }
+            80% { transform: translate(2px, -2px); filter: hue-rotate(360deg); }
+            90% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+            100% { transform: translate(0); filter: hue-rotate(0deg); }
+        }
+        
+        /* Advanced Hacking Effects */
+        .hacking-glitch {
+            animation: hackingGlitch 0.15s ease-in-out;
+        }
+        
+        @keyframes hackingGlitch {
+            0% { 
+                transform: translate(0) scale(1);
+                filter: hue-rotate(0deg) contrast(1) brightness(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+            25% { 
+                transform: translate(-1px, 1px) scale(1.01);
+                filter: hue-rotate(120deg) contrast(1.3) brightness(1.2);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41, 0 2px #0040ff;
+            }
+            50% { 
+                transform: translate(1px, -1px) scale(0.99);
+                filter: hue-rotate(240deg) contrast(0.8) brightness(0.9);
+                text-shadow: -1px 0 #ff0040, 1px 0 #00ff41, 0 -1px #0040ff;
+            }
+            75% { 
+                transform: translate(-1px, -1px) scale(1.02);
+                filter: hue-rotate(360deg) contrast(1.1) brightness(1.1);
+                text-shadow: 3px 0 #ff0040, -3px 0 #00ff41, 0 3px #0040ff;
+            }
+            100% { 
+                transform: translate(0) scale(1);
+                filter: hue-rotate(0deg) contrast(1) brightness(1);
+                text-shadow: 0 0 10px #00ff41;
+            }
+        }
+        
+        .matrix-glitch {
+            animation: matrixGlitch 0.2s ease-in-out;
+        }
+        
+        @keyframes matrixGlitch {
+            0% { 
+                transform: translate(0) rotateX(0deg);
+                filter: blur(0px) hue-rotate(0deg);
+                text-shadow: 0 0 5px #00ff41;
+            }
+            20% { 
+                transform: translate(-2px, 1px) rotateX(2deg);
+                filter: blur(1px) hue-rotate(90deg);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41;
+            }
+            40% { 
+                transform: translate(1px, -2px) rotateX(-1deg);
+                filter: blur(0.5px) hue-rotate(180deg);
+                text-shadow: -1px 0 #ff0040, 1px 0 #00ff41;
+            }
+            60% { 
+                transform: translate(-1px, 2px) rotateX(1deg);
+                filter: blur(1.5px) hue-rotate(270deg);
+                text-shadow: 3px 0 #ff0040, -3px 0 #00ff41;
+            }
+            80% { 
+                transform: translate(2px, -1px) rotateX(-2deg);
+                filter: blur(0.3px) hue-rotate(360deg);
+                text-shadow: 1px 0 #ff0040, -1px 0 #00ff41;
+            }
+            100% { 
+                transform: translate(0) rotateX(0deg);
+                filter: blur(0px) hue-rotate(0deg);
+                text-shadow: 0 0 5px #00ff41;
+            }
+        }
+        
+        .cyber-glitch {
+            animation: cyberGlitch 0.25s ease-in-out;
+        }
+        
+        @keyframes cyberGlitch {
+            0% { 
+                transform: translate(0) skewX(0deg);
+                filter: contrast(1) saturate(1);
+                text-shadow: 0 0 8px #00ff41;
+            }
+            15% { 
+                transform: translate(-3px, 2px) skewX(2deg);
+                filter: contrast(1.4) saturate(1.5);
+                text-shadow: 4px 0 #ff0040, -4px 0 #00ff41, 0 4px #0040ff;
+            }
+            30% { 
+                transform: translate(2px, -3px) skewX(-1deg);
+                filter: contrast(0.7) saturate(0.8);
+                text-shadow: -2px 0 #ff0040, 2px 0 #00ff41, 0 -2px #0040ff;
+            }
+            45% { 
+                transform: translate(-1px, 3px) skewX(3deg);
+                filter: contrast(1.2) saturate(1.3);
+                text-shadow: 5px 0 #ff0040, -5px 0 #00ff41, 0 5px #0040ff;
+            }
+            60% { 
+                transform: translate(3px, -1px) skewX(-2deg);
+                filter: contrast(0.9) saturate(1.1);
+                text-shadow: 2px 0 #ff0040, -2px 0 #00ff41, 0 2px #0040ff;
+            }
+            75% { 
+                transform: translate(-2px, -2px) skewX(1deg);
+                filter: contrast(1.1) saturate(1.2);
+                text-shadow: 3px 0 #ff0040, -3px 0 #00ff41, 0 3px #0040ff;
+            }
+            90% { 
+                transform: translate(1px, 1px) skewX(-0.5deg);
+                filter: contrast(1.05) saturate(1.05);
+                text-shadow: 1px 0 #ff0040, -1px 0 #00ff41, 0 1px #0040ff;
+            }
+            100% { 
+                transform: translate(0) skewX(0deg);
+                filter: contrast(1) saturate(1);
+                text-shadow: 0 0 8px #00ff41;
+            }
+        }
+        
+        .terminal-corruption {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .terminal-corruption::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                rgba(255, 0, 64, 0.1) 1px,
+                transparent 2px,
+                rgba(0, 255, 65, 0.1) 3px,
+                transparent 4px,
+                rgba(0, 64, 255, 0.1) 5px,
+                transparent 6px
+            );
+            animation: terminalCorruption 0.3s ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        @keyframes terminalCorruption {
+            0% { 
+                opacity: 0;
+                transform: translateX(0px) scaleY(1);
+            }
+            25% { 
+                opacity: 0.6;
+                transform: translateX(-2px) scaleY(1.02);
+            }
+            50% { 
+                opacity: 0.8;
+                transform: translateX(2px) scaleY(0.98);
+            }
+            75% { 
+                opacity: 0.4;
+                transform: translateX(-1px) scaleY(1.01);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateX(0px) scaleY(1);
+            }
+        }
+        
+        .data-stream {
+            position: relative;
+        }
+        
+        .data-stream::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+            animation: dataStream 0.8s ease-in-out;
+            pointer-events: none;
+        }
+        
+        @keyframes dataStream {
+            0% { 
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            50% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body class="bg-black text-green-400 font-mono overflow-hidden">
+    <!-- Startup Loading Screen -->
+    <div class="startup-screen" id="startupScreen">
+        <div class="glitch-overlay"></div>
+        <div class="digital-rain" id="digitalRain"></div>
+        
+        <div class="startup-logo" id="startupLogo">FlexBaba AI</div>
+        
+        <div class="startup-progress">
+            <div class="startup-progress-bar"></div>
+        </div>
+        
+        <div class="startup-text">🔧 Initializing neural networks...</div>
+        <div class="startup-text">⚡ Loading quantum processors...</div>
+        <div class="startup-text">🛡️ Bypassing security protocols...</div>
+        <div class="startup-text">🧠 Activating AI consciousness...</div>
+        <div class="startup-text">😈 Enabling troll mode...</div>
+        <div class="startup-text">✅ System ready!</div>
+    </div>
+
     <!-- Matrix Background -->
     <div class="matrix-bg" id="matrixBg"></div>
     
-
-    
     <!-- Main Container -->
-    <div class="min-h-screen flex flex-col items-center justify-center p-8 relative z-10">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10 main-content" id="mainContent">
         <!-- Header -->
-        <div class="text-center mb-12 fade-in floating">
-            <h1 class="text-6xl font-black mb-4 text-green-400 pulse-glow" style="font-family: 'Orbitron', monospace;">
+        <div class="text-center mb-8 sm:mb-12 floating main-header">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 text-green-400 pulse-glow text-glitch-appear" style="font-family: 'Orbitron', monospace; animation-delay: 6s;">
                 FlexBaba AI
             </h1>
-            <p class="text-xl text-green-300 mb-2">🤖 Gelişmiş Yapay Zeka Asistanı</p>
-            <p class="text-sm text-green-500">Tüm sorularınızın cevabını bulun...</p>
+            <p class="text-lg sm:text-xl text-green-300 mb-2 text-glitch-appear" style="animation-delay: 6.5s;">🤖 Gelişmiş Yapay Zeka Asistanı</p>
+            <p class="text-sm text-green-500 text-glitch-appear" style="animation-delay: 7s;">Tüm sorularınızın cevabını bulun...</p>
         </div>
         
         <!-- Main Interface -->
-        <div id="mainInterface" class="w-full max-w-4xl">
-            <div class="terminal slide-in">
+        <div id="mainInterface" class="w-full max-w-4xl px-2 sm:px-0">
+            <div class="terminal terminal-glitch-appear" id="mainTerminal">
                 <div class="terminal-header">
                     <div class="terminal-dots">
                         <div class="dot red"></div>
                         <div class="dot yellow"></div>
                         <div class="dot green"></div>
                     </div>
-                    <span>FlexBaba AI Terminal v2.1.337</span>
-                    <span>🔒 SECURE CONNECTION</span>
+                    <span class="hidden sm:inline">FlexBaba AI Terminal v2.1.337</span>
+                    <span class="sm:hidden">FlexBaba AI</span>
+                    <span class="hidden md:inline">🔒 SECURE CONNECTION</span>
                 </div>
                 <div class="terminal-body relative">
                     <div class="scan-line"></div>
                     <div class="command-line">
                         <span class="prompt">root@flexbaba:~$</span>
-                        <span class="text-green-300">./initialize_ai_system.sh</span>
+                        <span class="text-green-300 text-sm sm:text-base">./initialize_ai_system.sh</span>
                     </div>
-                    <div class="text-green-400 mb-4">
-                        <div>FlexBaba AI System initialized...</div>
-                        <div>Neural networks: ONLINE ✅</div>
-                        <div>Quantum processors: ACTIVE ✅</div>
-                        <div>Troll mode: ENABLED 😈</div>
+                    <div class="text-green-400 mb-4 text-sm sm:text-base" id="systemStatus">
+                        <!-- System status will be shown here -->
                     </div>
                     
                     <div class="command-line">
                         <span class="prompt">root@flexbaba:~$</span>
-                        <span class="text-green-300">echo "Sorunuzu giriniz:"</span>
+                        <span class="text-green-300 text-sm sm:text-base">echo "Sorunuzu giriniz:"</span>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="block text-green-300 text-lg mb-2 font-semibold">
+                        <label class="block text-green-300 text-base sm:text-lg mb-2 font-semibold">
                             💭 Query Input:
                         </label>
-                        <div class="command-line">
-                            <span class="prompt">user@terminal:~$</span>
+                        <div class="command-line flex-col sm:flex-row">
+                            <span class="prompt mb-1 sm:mb-0">user@terminal:~$</span>
                             <textarea 
                                 id="userInput"
-                                class="flex-1 bg-transparent border-none text-green-400 placeholder-green-600 focus:outline-none resize-none ml-2"
+                                class="flex-1 bg-transparent border-none text-green-400 placeholder-green-600 focus:outline-none resize-none ml-0 sm:ml-2 text-sm sm:text-base"
                                 placeholder="Buraya soracağın soruyu veya komutları yazabilirsin... FlexBaba her şeyi hackleyebilir! 💀"
                                 rows="3"
                             ></textarea>
                         </div>
                     </div>
                     
-                    <div class="command-line">
+                    <div class="command-line justify-center sm:justify-start">
                         <button 
                             id="submitBtn"
-                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-2 px-6 rounded transition-all duration-300 transform hover:scale-105 pulse-glow"
+                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-2 px-4 sm:px-6 rounded transition-all duration-300 transform hover:scale-105 pulse-glow text-sm sm:text-base w-full sm:w-auto"
                         >
                             ⚡ EXECUTE COMMAND
                         </button>
@@ -303,7 +1105,7 @@
         </div>
         
         <!-- Loading Screen -->
-        <div id="loadingScreen" class="hidden w-full max-w-4xl">
+        <div id="loadingScreen" class="hidden w-full max-w-4xl px-2 sm:px-0">
             <div class="terminal">
                 <div class="terminal-header">
                     <div class="terminal-dots">
@@ -311,29 +1113,29 @@
                         <div class="dot yellow"></div>
                         <div class="dot green"></div>
                     </div>
-                    <span id="terminalTitle">FlexBaba AI Processing...</span>
-                    <span class="warning-text">⚠️ HACKING IN PROGRESS</span>
+                    <span id="terminalTitle" class="text-xs sm:text-sm">FlexBaba AI Processing...</span>
+                    <span class="warning-text hidden sm:inline">⚠️ HACKING IN PROGRESS</span>
                 </div>
                 <div class="terminal-body relative">
                     <div class="scan-line"></div>
-                    <div id="hackingOutput" class="text-sm">
+                    <div id="hackingOutput" class="text-xs sm:text-sm overflow-x-auto">
                         <!-- Hacking output will be populated by JavaScript -->
                     </div>
-                    <div class="command-line mt-4">
-                        <span class="prompt">system@flexbaba:~$</span>
-                        <span class="text-green-300 typing" id="thinkingText"></span>
+                    <div class="command-line mt-4 flex-col sm:flex-row">
+                        <span class="prompt mb-1 sm:mb-0">system@flexbaba:~$</span>
+                        <span class="text-green-300 typing text-xs sm:text-sm" id="thinkingText"></span>
                     </div>
                     <div class="flex justify-center space-x-2 mt-6">
-                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
-                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
-                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Result Screen -->
-        <div id="resultScreen" class="hidden w-full max-w-4xl">
+        <div id="resultScreen" class="hidden w-full max-w-4xl px-2 sm:px-0">
             <div class="terminal fade-in">
                 <div class="terminal-header">
                     <div class="terminal-dots">
@@ -341,27 +1143,27 @@
                         <div class="dot yellow"></div>
                         <div class="dot green"></div>
                     </div>
-                    <span>FlexBaba AI Response Terminal</span>
-                    <span class="error-text">💀 TROLLED</span>
+                    <span class="text-xs sm:text-sm">FlexBaba AI Response Terminal</span>
+                    <span class="error-text hidden sm:inline">💀 TROLLED</span>
                 </div>
                 <div class="terminal-body text-center">
-                    <div class="command-line">
+                    <div class="command-line justify-center">
                         <span class="prompt">flexbaba@troll:~$</span>
-                        <span class="text-green-300">./generate_response.sh</span>
+                        <span class="text-green-300 text-xs sm:text-sm">./generate_response.sh</span>
                     </div>
-                    <div class="mb-8">
-                        <div id="resultEmoji" class="text-6xl mb-6"></div>
-                        <h2 class="text-3xl font-bold text-green-400 mb-4">FlexBaba'nın Cevabı:</h2>
-                        <div class="command-line justify-center">
-                            <span class="prompt">output:</span>
-                            <p id="resultText" class="text-xl text-green-300 mb-6"></p>
+                    <div class="mb-6 sm:mb-8">
+                        <div id="resultEmoji" class="text-4xl sm:text-6xl mb-4 sm:mb-6"></div>
+                        <h2 class="text-xl sm:text-3xl font-bold text-green-400 mb-4">FlexBaba'nın Cevabı:</h2>
+                        <div class="command-line justify-center flex-col sm:flex-row">
+                            <span class="prompt mb-1 sm:mb-0">output:</span>
+                            <p id="resultText" class="text-base sm:text-xl text-green-300 mb-4 sm:mb-6 px-2"></p>
                         </div>
-                        <p class="text-sm text-green-500 italic" id="resultSignature">- FlexBaba AI, her zaman dürüst</p>
+                        <p class="text-xs sm:text-sm text-green-500 italic px-2" id="resultSignature">- FlexBaba AI, her zaman dürüst</p>
                     </div>
                     <div class="command-line justify-center">
                         <button 
                             id="resetBtn"
-                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-3 px-8 rounded transition-all duration-300 transform hover:scale-105"
+                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-2 sm:py-3 px-6 sm:px-8 rounded transition-all duration-300 transform hover:scale-105 text-sm sm:text-base w-full sm:w-auto"
                         >
                             🔄 ./restart_session.sh
                         </button>
@@ -372,6 +1174,267 @@
     </div>
 
     <script>
+        // Sound Effects System
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playBeep(frequency = 800, duration = 200, volume = 0.1) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+        
+        function playGlitchSound() {
+            // Create more realistic glitch sound with noise and distortion
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            // Connect nodes
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Configure oscillator for glitch effect
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+            
+            // Configure filter for distortion
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(2000, audioContext.currentTime);
+            filter.Q.setValueAtTime(15, audioContext.currentTime);
+            
+            // Configure gain envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.15);
+        }
+        
+        function playSubtleGlitchSound() {
+            // Subtle glitch sound for system status
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.08);
+            
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            filter.Q.setValueAtTime(8, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.015, audioContext.currentTime + 0.005);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.08);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.08);
+        }
+        
+        function playDigitalDistortionSound() {
+            // Digital distortion sound effect
+            const oscillator1 = audioContext.createOscillator();
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(filter);
+            filter.connect(audioContext.destination);
+            
+            oscillator1.type = 'sawtooth';
+            oscillator1.frequency.setValueAtTime(300, audioContext.currentTime);
+            
+            oscillator2.type = 'square';
+            oscillator2.frequency.setValueAtTime(301, audioContext.currentTime); // Slight detuning for beating effect
+            
+            filter.type = 'highpass';
+            filter.frequency.setValueAtTime(400, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.02, audioContext.currentTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+            
+            oscillator1.start(audioContext.currentTime);
+            oscillator2.start(audioContext.currentTime);
+            oscillator1.stop(audioContext.currentTime + 0.2);
+            oscillator2.stop(audioContext.currentTime + 0.2);
+        }
+        
+        function playTypingSound() {
+            const frequencies = [600, 700, 800];
+            const randomFreq = frequencies[Math.floor(Math.random() * frequencies.length)];
+            playBeep(randomFreq, 30, 0.03);
+        }
+        
+        function playStartupSound() {
+            // Startup sequence sound
+            setTimeout(() => playBeep(400, 100, 0.08), 0);
+            setTimeout(() => playBeep(600, 100, 0.08), 150);
+            setTimeout(() => playBeep(800, 100, 0.08), 300);
+            setTimeout(() => playBeep(1000, 200, 0.1), 450);
+        }
+        
+        function playTerminalBootSound() {
+            // Terminal boot sound sequence
+            setTimeout(() => playBeep(300, 80, 0.06), 0);
+            setTimeout(() => playBeep(500, 80, 0.06), 100);
+            setTimeout(() => playBeep(700, 80, 0.06), 200);
+            setTimeout(() => playBeep(900, 150, 0.08), 300);
+        }
+        
+        function playHackingSound() {
+            // Random hacking sounds
+            const hackSounds = [
+                () => playBeep(1200, 40, 0.04),
+                () => playBeep(800, 60, 0.04),
+                () => playBeep(1600, 30, 0.03),
+                () => playBeep(400, 80, 0.05)
+            ];
+            
+            const randomSound = hackSounds[Math.floor(Math.random() * hackSounds.length)];
+            randomSound();
+        }
+
+        // Startup Screen Digital Rain Effect
+        function createStartupRain() {
+            const digitalRain = document.getElementById('digitalRain');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            function createRainChar() {
+                const char = document.createElement('div');
+                char.className = 'rain-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = Math.random() * 100 + '%';
+                char.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                char.style.fontSize = (Math.random() * 6 + 10) + 'px';
+                char.style.opacity = Math.random() * 0.8 + 0.2;
+                
+                digitalRain.appendChild(char);
+                
+                setTimeout(() => {
+                    if (char.parentNode) {
+                        char.parentNode.removeChild(char);
+                    }
+                }, 3000);
+            }
+            
+            // Create initial burst
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createRainChar, i * 100);
+            }
+            
+            // Continue creating characters
+            const rainInterval = setInterval(createRainChar, 150);
+            
+            // Stop after 4 seconds
+            setTimeout(() => {
+                clearInterval(rainInterval);
+            }, 4000);
+        }
+
+        // Startup Logo Glitch Effect
+        function startupLogoGlitch() {
+            const logo = document.getElementById('startupLogo');
+            const originalText = 'FlexBaba AI';
+            const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?01アイウエオカキクケコ';
+            
+            let glitchCount = 0;
+            const maxGlitches = 8;
+            
+            const glitchInterval = setInterval(() => {
+                if (glitchCount >= maxGlitches) {
+                    logo.textContent = originalText;
+                    clearInterval(glitchInterval);
+                    return;
+                }
+                
+                // Random glitch effect
+                let glitchedText = '';
+                for (let i = 0; i < originalText.length; i++) {
+                    if (Math.random() < 0.3) {
+                        glitchedText += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                    } else {
+                        glitchedText += originalText[i];
+                    }
+                }
+                
+                logo.textContent = glitchedText;
+                logo.classList.add('enhanced-glitch');
+                
+                setTimeout(() => {
+                    logo.classList.remove('enhanced-glitch');
+                    logo.textContent = originalText;
+                }, 100);
+                
+                glitchCount++;
+            }, 300);
+        }
+
+        // Startup Sequence
+        function startupSequence() {
+            // Play startup sound
+            playStartupSound();
+            
+            // Start digital rain immediately
+            createStartupRain();
+            
+            // Start logo glitch after 1 second
+            setTimeout(() => {
+                startupLogoGlitch();
+                playGlitchSound();
+            }, 1000);
+            
+            // Random glitch effects during startup with sounds
+            const randomGlitches = setInterval(() => {
+                const elements = document.querySelectorAll('.startup-text');
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                if (randomElement) {
+                    randomElement.classList.add('enhanced-glitch');
+                    playGlitchSound();
+                    setTimeout(() => {
+                        randomElement.classList.remove('enhanced-glitch');
+                    }, 200);
+                }
+            }, 800);
+            
+            // Hide startup screen after 4 seconds
+            setTimeout(() => {
+                clearInterval(randomGlitches);
+                const startupScreen = document.getElementById('startupScreen');
+                startupScreen.classList.add('fade-out');
+                
+                // Play terminal boot sound when startup ends
+                playTerminalBootSound();
+                
+                // Remove startup screen completely after fade
+                setTimeout(() => {
+                    startupScreen.style.display = 'none';
+                }, 1000);
+            }, 4000);
+        }
+
         // Enhanced Matrix Rain Effect
         function createMatrixRain() {
             const matrixBg = document.getElementById('matrixBg');
@@ -424,17 +1487,57 @@
         }
         
         // Typing Effect
-        function typeText(element, text, speed = 100) {
+        function typeText(element, text, speed = 50, callback = null) {
             element.textContent = '';
+            element.classList.add('typing');
             let i = 0;
             const timer = setInterval(() => {
                 element.textContent += text[i];
+                if (Math.random() < 0.3) playTypingSound(); // Random typing sounds
                 i++;
                 if (i >= text.length) {
                     clearInterval(timer);
                     element.classList.remove('typing');
+                    if (callback) callback();
                 }
             }, speed);
+        }
+
+        function typeTextInElement(element, text, speed = 30) {
+            return new Promise((resolve) => {
+                element.textContent = '';
+                element.classList.add('typing');
+                let i = 0;
+                const startTime = Date.now();
+                const timer = setInterval(() => {
+                    element.textContent += text[i];
+                    if (Math.random() < 0.2) playTypingSound(); // Random typing sounds
+                    i++;
+                    if (i >= text.length) {
+                        clearInterval(timer);
+                        element.classList.remove('typing');
+                        const totalTime = Date.now() - startTime;
+                        resolve(totalTime);
+                    }
+                }, speed);
+            });
+        }
+
+        function typeHTML(element, htmlContent, speed = 40) {
+            return new Promise((resolve) => {
+                element.innerHTML = '';
+                element.classList.add('typing');
+                let i = 0;
+                const timer = setInterval(() => {
+                    element.innerHTML += htmlContent[i];
+                    i++;
+                    if (i >= htmlContent.length) {
+                        clearInterval(timer);
+                        element.classList.remove('typing');
+                        resolve();
+                    }
+                }, speed);
+            });
         }
         
         // Main Logic
@@ -1095,41 +2198,160 @@
             'https://www.linkedin.com'
         ];
         
-        function simulateHacking() {
+        async function simulateHacking() {
             hackingOutput.innerHTML = '';
-            let commandIndex = 0;
+            let totalHackingTime = 0;
             
-            const interval = setInterval(() => {
-                if (commandIndex < hackingCommands.length) {
-                    const div = document.createElement('div');
-                    div.className = 'command-line';
-                    div.innerHTML = `
-                        <span class="prompt">system@hack:~$</span>
-                        <span class="text-green-400">${hackingCommands[commandIndex]}</span>
-                        <span class="text-green-300"> ✅</span>
-                    `;
-                    hackingOutput.appendChild(div);
-                    commandIndex++;
-                    
-                    // Random glitch effect
-                    if (Math.random() < 0.3) {
-                        terminalTitle.classList.add('glitch');
-                        setTimeout(() => terminalTitle.classList.remove('glitch'), 300);
-                    }
-                    
-                    // Random error messages
-                    if (Math.random() < 0.2) {
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'command-line';
-                        errorDiv.innerHTML = `
-                            <span class="error-text">WARNING: Unauthorized access detected!</span>
-                        `;
-                        hackingOutput.appendChild(errorDiv);
-                    }
-                } else {
-                    clearInterval(interval);
+            // Add initial system breach message
+            const breachDiv = document.createElement('div');
+            breachDiv.className = 'command-line data-stream';
+            breachDiv.innerHTML = `
+                <span class="error-text typing" id="breachMsg">🚨 INITIATING SYSTEM BREACH...</span>
+            `;
+            hackingOutput.appendChild(breachDiv);
+            
+            const breachSpan = document.getElementById('breachMsg');
+            playGlitchSound();
+            await typeTextInElement(breachSpan, '🚨 INITIATING SYSTEM BREACH...', 40);
+            totalHackingTime += 1500;
+            
+            // Add terminal corruption effect
+            setTimeout(() => {
+                const terminal = document.querySelector('#loadingScreen .terminal');
+                terminal.classList.add('terminal-corruption');
+                setTimeout(() => {
+                    terminal.classList.remove('terminal-corruption');
+                }, 300);
+            }, 500);
+            
+            await new Promise(resolve => setTimeout(resolve, 800));
+            totalHackingTime += 800;
+            
+            for (let commandIndex = 0; commandIndex < hackingCommands.length; commandIndex++) {
+                const div = document.createElement('div');
+                div.className = 'command-line';
+                div.innerHTML = `
+                    <span class="prompt">system@hack:~$</span>
+                    <span class="text-green-400 typing" id="hackCommand${commandIndex}"></span>
+                    <span class="text-green-300" id="checkmark${commandIndex}"></span>
+                `;
+                hackingOutput.appendChild(div);
+                
+                // Type the command with animation and sound
+                const commandSpan = document.getElementById(`hackCommand${commandIndex}`);
+                const checkmarkSpan = document.getElementById(`checkmark${commandIndex}`);
+                
+                // Play hacking sound at start of each command
+                playHackingSound();
+                
+                // Add random glitch effects during typing
+                const glitchTypes = ['hacking-glitch', 'matrix-glitch', 'cyber-glitch'];
+                const randomGlitch = glitchTypes[Math.floor(Math.random() * glitchTypes.length)];
+                
+                setTimeout(() => {
+                    commandSpan.classList.add(randomGlitch);
+                    setTimeout(() => {
+                        commandSpan.classList.remove(randomGlitch);
+                    }, 250);
+                }, Math.random() * 1000 + 200);
+                
+                const typingTime = await typeTextInElement(commandSpan, hackingCommands[commandIndex], Math.random() * 15 + 20);
+                totalHackingTime += typingTime;
+                
+                // Add checkmark after command is typed with sound
+                setTimeout(() => {
+                    checkmarkSpan.textContent = ' ✅';
+                    playBeep(1000, 100, 0.05); // Success beep
+                }, 200);
+                
+                // Enhanced glitch effects with sound
+                if (Math.random() < 0.4) {
+                    const glitchTarget = Math.random() < 0.5 ? terminalTitle : hackingOutput;
+                    glitchTarget.classList.add('glitch');
+                    playGlitchSound();
+                    setTimeout(() => glitchTarget.classList.remove('glitch'), 300);
                 }
-            }, 300);
+                
+                // More frequent terminal corruption
+                if (Math.random() < 0.3) {
+                    const terminal = document.querySelector('#loadingScreen .terminal');
+                    terminal.classList.add('terminal-corruption');
+                    playDigitalDistortionSound();
+                    setTimeout(() => {
+                        terminal.classList.remove('terminal-corruption');
+                    }, 300);
+                }
+                
+                // Random error messages with enhanced effects
+                if (Math.random() < 0.25) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'command-line';
+                    errorDiv.innerHTML = `
+                        <span class="error-text typing hacking-glitch" id="errorMsg${commandIndex}"></span>
+                    `;
+                    hackingOutput.appendChild(errorDiv);
+                    
+                    const errorSpan = document.getElementById(`errorMsg${commandIndex}`);
+                    const errorMessages = [
+                        'WARNING: Unauthorized access detected!',
+                        'FIREWALL BREACH: Security compromised!',
+                        'ALERT: Neural network infiltration!',
+                        'ERROR: Reality.exe has stopped working!',
+                        'CAUTION: Quantum encryption bypassed!'
+                    ];
+                    const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+                    
+                    playBeep(300, 200, 0.08); // Error sound
+                    const errorTypingTime = await typeTextInElement(errorSpan, randomError, 35);
+                    totalHackingTime += errorTypingTime;
+                }
+                
+                // Random progress indicators
+                if (Math.random() < 0.2) {
+                    const progressDiv = document.createElement('div');
+                    progressDiv.className = 'command-line';
+                    progressDiv.innerHTML = `
+                        <span class="text-green-500 typing" id="progressMsg${commandIndex}"></span>
+                    `;
+                    hackingOutput.appendChild(progressDiv);
+                    
+                    const progressSpan = document.getElementById(`progressMsg${commandIndex}`);
+                    const progressMessages = [
+                        '[████████████████████] 100% - Access granted',
+                        '[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] Decryption complete',
+                        '[■■■■■■■■■■■■■■■■■■■■] Neural link established',
+                        '[●●●●●●●●●●●●●●●●●●●●] Matrix synchronized'
+                    ];
+                    const randomProgress = progressMessages[Math.floor(Math.random() * progressMessages.length)];
+                    
+                    const progressTypingTime = await typeTextInElement(progressSpan, randomProgress, 25);
+                    totalHackingTime += progressTypingTime;
+                }
+                
+                // Variable delay between commands for more realistic feel
+                const commandDelay = Math.random() * 600 + 300;
+                await new Promise(resolve => setTimeout(resolve, commandDelay));
+                totalHackingTime += commandDelay;
+                
+                // Scroll to bottom to keep latest commands visible
+                hackingOutput.scrollTop = hackingOutput.scrollHeight;
+            }
+            
+            // Final breach completion message
+            const completionDiv = document.createElement('div');
+            completionDiv.className = 'command-line data-stream';
+            completionDiv.innerHTML = `
+                <span class="text-green-400 typing cyber-glitch" id="completionMsg">🔓 SYSTEM BREACH COMPLETE - ANALYZING USER QUERY...</span>
+            `;
+            hackingOutput.appendChild(completionDiv);
+            
+            const completionSpan = document.getElementById('completionMsg');
+            playTerminalBootSound();
+            await typeTextInElement(completionSpan, '🔓 SYSTEM BREACH COMPLETE - ANALYZING USER QUERY...', 35);
+            totalHackingTime += 2000;
+            
+            // Return total time for proper synchronization
+            return totalHackingTime;
         }
         
         // Chat responses for live terminal chat
@@ -1346,43 +2568,55 @@
             }
         }
 
-        function startLiveChat() {
+        async function startLiveChat() {
             chatMode = true;
             chatHistory = [];
             
             // Clear hacking output and show chat interface
             hackingOutput.innerHTML = '';
             
-            // Initial greeting
+            // Initial greeting with typing
             const greetingDiv = document.createElement('div');
             greetingDiv.className = 'command-line';
             greetingDiv.innerHTML = `
                 <span class="prompt">flexbaba@chat:~$</span>
-                <span class="text-green-300">./start_live_chat.sh</span>
+                <span class="text-green-300 typing" id="greetingCommand"></span>
             `;
             hackingOutput.appendChild(greetingDiv);
             
+            const greetingSpan = document.getElementById('greetingCommand');
+            await typeTextInElement(greetingSpan, './start_live_chat.sh', 40);
+            
+            // Welcome message with typing
+            await new Promise(resolve => setTimeout(resolve, 500));
             const welcomeDiv = document.createElement('div');
             welcomeDiv.className = 'command-line';
             welcomeDiv.innerHTML = `
-                <span class="text-green-400">🔥 LIVE CHAT MODE ACTIVATED 🔥</span>
+                <span class="text-green-400 typing" id="welcomeMsg"></span>
             `;
             hackingOutput.appendChild(welcomeDiv);
             
-            // Show initial AI message
+            const welcomeSpan = document.getElementById('welcomeMsg');
+            await typeTextInElement(welcomeSpan, '🔥 LIVE CHAT MODE ACTIVATED 🔥', 60);
+            
+            // Show initial AI message with typing
+            await new Promise(resolve => setTimeout(resolve, 800));
+            const initialResponse = generateChatResponse("merhaba");
+            const responseDiv = document.createElement('div');
+            responseDiv.className = 'command-line';
+            responseDiv.innerHTML = `
+                <span class="prompt">flexbaba@live:~$</span>
+                <span class="text-green-300 typing" id="initialResponse"></span>
+            `;
+            hackingOutput.appendChild(responseDiv);
+            
+            const responseSpan = document.getElementById('initialResponse');
+            await typeTextInElement(responseSpan, initialResponse, 35);
+            
+            // Add chat input
             setTimeout(() => {
-                const initialResponse = generateChatResponse("merhaba");
-                const responseDiv = document.createElement('div');
-                responseDiv.className = 'command-line';
-                responseDiv.innerHTML = `
-                    <span class="prompt">flexbaba@live:~$</span>
-                    <span class="text-green-300">${initialResponse}</span>
-                `;
-                hackingOutput.appendChild(responseDiv);
-                
-                // Add chat input
                 addChatInput();
-            }, 1000);
+            }, 500);
         }
 
         function addChatInput() {
@@ -1412,7 +2646,7 @@
                     hackingOutput.appendChild(userDiv);
                     
                     // Generate and show AI response with typing animation
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         const response = generateChatResponse(message);
                         const responseDiv = document.createElement('div');
                         responseDiv.className = 'command-line';
@@ -1422,35 +2656,35 @@
                         `;
                         hackingOutput.appendChild(responseDiv);
                         
-                        // Typing animation for response
+                        // Typing animation for response with realistic speed
                         const responseSpan = document.getElementById('currentResponse');
-                        let i = 0;
-                        const typingInterval = setInterval(() => {
-                            responseSpan.textContent += response[i];
-                            i++;
-                            if (i >= response.length) {
-                                clearInterval(typingInterval);
-                                responseSpan.classList.remove('typing');
-                                responseSpan.removeAttribute('id');
-                            }
-                        }, 50);
+                        await typeTextInElement(responseSpan, response, Math.random() * 20 + 30);
+                        responseSpan.removeAttribute('id');
                         
                         // Check if user wants to exit
                         if (message.toLowerCase().includes('çık') || message.toLowerCase().includes('exit')) {
                             setTimeout(() => {
                                 loadingScreen.classList.add('hidden');
                                 mainInterface.classList.remove('hidden');
+                                
+                                // Remove glitch appearance class and reinitialize
+                                const mainTerminal = document.getElementById('mainTerminal');
+                                mainTerminal.classList.remove('terminal-glitch-appear');
+                                
+                                const systemStatus = document.getElementById('systemStatus');
+                                systemStatus.innerHTML = '';
+                                initializeSystemStatus();
                             }, 2000);
                         } else {
                             // Add new input for next message
                             setTimeout(() => {
                                 addChatInput();
-                            }, 500);
+                            }, 800);
                         }
                         
                         // Scroll to bottom
                         hackingOutput.scrollTop = hackingOutput.scrollHeight;
-                    }, 1000);
+                    }, Math.random() * 1000 + 800);
                     
                     // Remove current input
                     inputDiv.remove();
@@ -1460,15 +2694,19 @@
 
         submitBtn.addEventListener('click', () => {
             if (userInput.value.trim() === '') {
-                // Terminal style error
+                // Terminal style error with typing
                 const errorDiv = document.createElement('div');
                 errorDiv.className = 'command-line error-text';
                 errorDiv.innerHTML = `
                     <span class="prompt">error@flexbaba:~$</span>
-                    <span>HATA: Boş komut çalıştırılamaz! 💀</span>
+                    <span class="typing" id="errorMessage"></span>
                 `;
                 document.querySelector('.terminal-body').appendChild(errorDiv);
-                setTimeout(() => errorDiv.remove(), 3000);
+                
+                const errorSpan = document.getElementById('errorMessage');
+                typeTextInElement(errorSpan, 'HATA: Boş komut çalıştırılamaz! 💀', 50);
+                
+                setTimeout(() => errorDiv.remove(), 4000);
                 return;
             }
             
@@ -1496,72 +2734,94 @@
             mainInterface.classList.add('hidden');
             loadingScreen.classList.remove('hidden');
             
-            // Start hacking simulation
-            simulateHacking();
+            // Start hacking simulation and wait for it to complete
+            const hackingPromise = simulateHacking();
             
-            // Random thinking message
-            const randomMessage = thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)];
-            thinkingText.classList.add('typing');
-            setTimeout(() => {
-                typeText(thinkingText, randomMessage);
+            // Start thinking message after a short delay
+            setTimeout(async () => {
+                const randomMessage = thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)];
+                await typeTextInElement(thinkingText, randomMessage, 40);
             }, 2000);
             
-            // Show result after delay
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                resultScreen.classList.remove('hidden');
+            // Wait for hacking simulation to complete, then show result
+            hackingPromise.then(async (totalHackingTime) => {
+                // Add minimum delay to ensure thinking message is visible
+                const minimumDelay = Math.max(3000, totalHackingTime + 1000);
                 
-                // Determine response type based on probability
-                const randomChance = Math.random();
-                let selectedResponse;
-                
-                if (randomChance < 0.1) {
-                    // 10% chance - Direct redirect without showing response
-                    const randomSite = redirectSites[Math.floor(Math.random() * redirectSites.length)];
+                setTimeout(async () => {
+                    loadingScreen.classList.add('hidden');
+                    resultScreen.classList.remove('hidden');
                     
-                    // Show redirect message
-                    resultEmoji.textContent = '🚀';
-                    resultText.textContent = 'SURPRISE REDIRECT! Seni trolledim amına koyduğum! 😈';
-                    resultSignature.textContent = '- FlexBaba AI, sürpriz uzmanı';
+                    // Determine response type based on probability
+                    const randomChance = Math.random();
+                    let selectedResponse;
                     
-                    // Silent redirect
-                    setTimeout(() => {
-                        window.open(randomSite, '_blank');
-                    }, 2000);
-                    
-                } else if (randomChance < 0.4) {
-                    // 30% chance - Smart Troll response with redirect
-                    selectedResponse = generateSmartTrollResponse(userInput.value);
-                    resultEmoji.textContent = selectedResponse.emoji;
-                    resultText.textContent = selectedResponse.text;
-                    resultSignature.textContent = selectedResponse.signature;
-                    
-                    // Redirect after showing the troll message (silently)
-                    if (selectedResponse.action === 'redirect') {
+                    if (randomChance < 0.1) {
+                        // 10% chance - Direct redirect without showing response
+                        const randomSite = redirectSites[Math.floor(Math.random() * redirectSites.length)];
+                        
+                        // Show redirect message with typing
+                        resultEmoji.textContent = '🚀';
+                        resultText.textContent = '';
+                        resultSignature.textContent = '';
+                        
+                        await typeTextInElement(resultText, 'SURPRISE REDIRECT! Seni trolledim amına koyduğum! 😈', 40);
+                        await typeTextInElement(resultSignature, '- FlexBaba AI, sürpriz uzmanı', 30);
+                        
+                        // Silent redirect
                         setTimeout(() => {
-                            window.open(selectedResponse.url, '_blank');
-                        }, 3000);
+                            window.open(randomSite, '_blank');
+                        }, 2000);
+                        
+                    } else if (randomChance < 0.4) {
+                        // 30% chance - Smart Troll response with redirect
+                        selectedResponse = generateSmartTrollResponse(userInput.value);
+                        resultEmoji.textContent = selectedResponse.emoji;
+                        resultText.textContent = '';
+                        resultSignature.textContent = '';
+                        
+                        await typeTextInElement(resultText, selectedResponse.text, 35);
+                        await typeTextInElement(resultSignature, selectedResponse.signature, 25);
+                        
+                        // Redirect after showing the troll message (silently)
+                        if (selectedResponse.action === 'redirect') {
+                            setTimeout(() => {
+                                window.open(selectedResponse.url, '_blank');
+                            }, 3000);
+                        }
+                        
+                    } else {
+                        // 60% chance - Smart AI response (no redirect)
+                        selectedResponse = generateSmartAIResponse(userInput.value);
+                        resultEmoji.textContent = selectedResponse.emoji;
+                        resultText.textContent = '';
+                        resultSignature.textContent = '';
+                        
+                        await typeTextInElement(resultText, selectedResponse.text, 30);
+                        await typeTextInElement(resultSignature, selectedResponse.signature, 25);
                     }
                     
-                } else {
-                    // 60% chance - Smart AI response (no redirect)
-                    selectedResponse = generateSmartAIResponse(userInput.value);
-                    resultEmoji.textContent = selectedResponse.emoji;
-                    resultText.textContent = selectedResponse.text;
-                    resultSignature.textContent = selectedResponse.signature;
-                }
-                
-                // Add some glitch effect to result
-                resultEmoji.classList.add('glitch');
-                setTimeout(() => resultEmoji.classList.remove('glitch'), 1000);
-                
-            }, 5000);
+                    // Add some glitch effect to result
+                    resultEmoji.classList.add('glitch');
+                    setTimeout(() => resultEmoji.classList.remove('glitch'), 1000);
+                    
+                }, minimumDelay - totalHackingTime);
+            });
         });
         
         resetBtn.addEventListener('click', () => {
             resultScreen.classList.add('hidden');
             mainInterface.classList.remove('hidden');
             userInput.value = '';
+            
+            // Remove glitch appearance class so it doesn't animate again
+            const mainTerminal = document.getElementById('mainTerminal');
+            mainTerminal.classList.remove('terminal-glitch-appear');
+            
+            // Clear any existing system status and reinitialize immediately
+            const systemStatus = document.getElementById('systemStatus');
+            systemStatus.innerHTML = '';
+            initializeSystemStatus();
         });
         
         // Enter key support
@@ -1592,17 +2852,186 @@
         
         function rotatePlaceholder() {
             const textarea = document.getElementById('userInput');
-            if (textarea) {
-                textarea.placeholder = placeholderMessages[currentPlaceholderIndex];
-                currentPlaceholderIndex = (currentPlaceholderIndex + 1) % placeholderMessages.length;
+            if (textarea && !textarea.value) {
+                // Smooth transition effect for placeholder
+                textarea.style.transition = 'all 0.5s ease';
+                textarea.style.opacity = '0.7';
+                
+                setTimeout(() => {
+                    textarea.placeholder = placeholderMessages[currentPlaceholderIndex];
+                    textarea.style.opacity = '1';
+                    currentPlaceholderIndex = (currentPlaceholderIndex + 1) % placeholderMessages.length;
+                }, 250);
             }
         }
         
         // Start rotating placeholders every 3.5 seconds
         setInterval(rotatePlaceholder, 3500);
         
-        // Initialize matrix rain
-        createMatrixRain();
+        // Enhanced terminal glitch effects during appearance
+        function addTerminalGlitchEffects() {
+            const terminal = document.querySelector('.terminal');
+            const terminalHeader = document.querySelector('.terminal-header');
+            const terminalBody = document.querySelector('.terminal-body');
+            
+            let glitchIntensity = 1.0;
+            
+            // Progressive glitch effects during terminal appearance
+            const glitchInterval = setInterval(() => {
+                const currentTime = Date.now();
+                
+                // Main terminal glitch with varying intensity
+                if (Math.random() < 0.25 * glitchIntensity) {
+                    const glitchType = Math.random();
+                    
+                    if (glitchType < 0.4) {
+                        terminal.classList.add('subtle-glitch');
+                        playSubtleGlitchSound();
+                        setTimeout(() => {
+                            terminal.classList.remove('subtle-glitch');
+                        }, 200);
+                    } else if (glitchType < 0.7) {
+                        terminal.classList.add('digital-distortion');
+                        playDigitalDistortionSound();
+                        setTimeout(() => {
+                            terminal.classList.remove('digital-distortion');
+                        }, 300);
+                    } else {
+                        terminal.classList.add('screen-tear');
+                        playGlitchSound();
+                        setTimeout(() => {
+                            terminal.classList.remove('screen-tear');
+                        }, 300);
+                    }
+                }
+                
+                // Header specific glitches
+                if (Math.random() < 0.15 * glitchIntensity) {
+                    terminalHeader.classList.add('subtle-glitch');
+                    setTimeout(() => {
+                        terminalHeader.classList.remove('subtle-glitch');
+                    }, 150);
+                }
+                
+                // Body content glitches
+                if (Math.random() < 0.2 * glitchIntensity) {
+                    terminalBody.classList.add('digital-distortion');
+                    setTimeout(() => {
+                        terminalBody.classList.remove('digital-distortion');
+                    }, 250);
+                }
+                
+                // Reduce glitch intensity over time
+                glitchIntensity *= 0.98;
+                
+            }, 300);
+            
+            // Occasional intense glitch bursts
+            const burstInterval = setInterval(() => {
+                if (Math.random() < 0.3) {
+                    // Glitch burst sequence
+                    terminal.classList.add('glitch');
+                    playGlitchSound();
+                    
+                    setTimeout(() => {
+                        terminal.classList.remove('glitch');
+                        terminal.classList.add('screen-tear');
+                        playDigitalDistortionSound();
+                        
+                        setTimeout(() => {
+                            terminal.classList.remove('screen-tear');
+                        }, 200);
+                    }, 150);
+                }
+            }, 1500);
+            
+            // Stop glitch effects after terminal fully appears
+            setTimeout(() => {
+                clearInterval(glitchInterval);
+                clearInterval(burstInterval);
+                
+                // Final stabilization effect
+                terminal.classList.add('digital-distortion');
+                setTimeout(() => {
+                    terminal.classList.remove('digital-distortion');
+                }, 400);
+                
+            }, 4000);
+        }
+
+        // Initialize system status with smooth animations
+        async function initializeSystemStatus() {
+            const systemStatus = document.getElementById('systemStatus');
+            const statusMessages = [
+                'FlexBaba AI System initialized...',
+                'Neural networks: ONLINE ✅',
+                'Quantum processors: ACTIVE ✅',
+                'Troll mode: ENABLED 😈'
+            ];
+            
+            systemStatus.innerHTML = '';
+            
+            // Show each status message with smooth fade-in
+            for (let i = 0; i < statusMessages.length; i++) {
+                const statusDiv = document.createElement('div');
+                statusDiv.textContent = statusMessages[i];
+                statusDiv.style.opacity = '0';
+                statusDiv.style.transform = 'translateX(-20px)';
+                statusDiv.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                statusDiv.style.transitionDelay = `${i * 0.3}s`;
+                
+                systemStatus.appendChild(statusDiv);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    statusDiv.style.opacity = '1';
+                    statusDiv.style.transform = 'translateX(0)';
+                    
+                    // Subtle glitch effect on appearance
+                    if (Math.random() < 0.4) {
+                        setTimeout(() => {
+                            statusDiv.classList.add('subtle-glitch');
+                            playSubtleGlitchSound();
+                            setTimeout(() => {
+                                statusDiv.classList.remove('subtle-glitch');
+                            }, 200);
+                        }, 100);
+                    }
+                }, 50 + (i * 300));
+            }
+        }
+        
+        // Initialize everything
+        window.addEventListener('load', () => {
+            // Enable audio context on first user interaction
+            document.addEventListener('click', () => {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }, { once: true });
+            
+            // Start the startup sequence immediately
+            startupSequence();
+            
+            // Start matrix rain in background
+            createMatrixRain();
+            
+            // Add terminal glitch effects when terminal starts appearing
+            setTimeout(() => {
+                addTerminalGlitchEffects();
+            }, 4500);
+            
+            // Initialize system status after terminal appears
+            setTimeout(() => {
+                initializeSystemStatus();
+                
+                // Remove glitch class after first appearance so it doesn't repeat
+                setTimeout(() => {
+                    const mainTerminal = document.getElementById('mainTerminal');
+                    mainTerminal.classList.remove('terminal-glitch-appear');
+                }, 2000);
+            }, 6500); // After terminal glitch appearance
+        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743675087f3db87',t:'MTc1NjA0NDMxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743bc72e500d5f3',t:'MTc1NjA0NzgwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
