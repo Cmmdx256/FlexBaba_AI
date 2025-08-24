@@ -11,6 +11,11 @@
         /* Responsive Design */
         * {
             box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%2300ff41" d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/><path fill="%23ff0040" d="M12 6L12.5 10.5L17 11L12.5 11.5L12 16L11.5 11.5L7 11L11.5 10.5L12 6Z"/></svg>') 12 12, auto;
+        }
+        
+        button, input, textarea {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%2300ff41" d="M8 3V5H6V9H4V7H2V21H4V19H6V15H8V17H10V21H12V19H14V15H16V17H18V21H20V19H22V7H20V9H18V5H16V3H8Z"/></svg>') 12 12, pointer;
         }
         
         html, body {
@@ -1177,6 +1182,120 @@
         // Sound Effects System
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         
+        // Jumpscare System (5% chance)
+        function createJumpscareSound() {
+            // Create terrifying scream sound
+            const oscillator1 = audioContext.createOscillator();
+            const oscillator2 = audioContext.createOscillator();
+            const oscillator3 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            oscillator3.connect(gainNode);
+            gainNode.connect(filter);
+            filter.connect(audioContext.destination);
+            
+            // Horror frequencies
+            oscillator1.type = 'sawtooth';
+            oscillator1.frequency.setValueAtTime(150, audioContext.currentTime);
+            oscillator1.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.3);
+            
+            oscillator2.type = 'square';
+            oscillator2.frequency.setValueAtTime(300, audioContext.currentTime);
+            oscillator2.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.5);
+            
+            oscillator3.type = 'triangle';
+            oscillator3.frequency.setValueAtTime(100, audioContext.currentTime);
+            oscillator3.frequency.exponentialRampToValueAtTime(2000, audioContext.currentTime + 0.8);
+            
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(800, audioContext.currentTime);
+            filter.Q.setValueAtTime(20, audioContext.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 1.5);
+            
+            oscillator1.start(audioContext.currentTime);
+            oscillator2.start(audioContext.currentTime + 0.1);
+            oscillator3.start(audioContext.currentTime + 0.2);
+            
+            oscillator1.stop(audioContext.currentTime + 1.5);
+            oscillator2.stop(audioContext.currentTime + 1.5);
+            oscillator3.stop(audioContext.currentTime + 1.5);
+        }
+        
+        function triggerJumpscare() {
+            // Create jumpscare overlay
+            const jumpscareDiv = document.createElement('div');
+            jumpscareDiv.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: #000;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: jumpscareFlash 0.1s infinite;
+            `;
+            
+            jumpscareDiv.innerHTML = `
+                <div style="text-align: center; color: #ff0000; font-size: 8rem; font-family: 'Orbitron', monospace; text-shadow: 0 0 50px #ff0000; animation: screamShake 0.1s infinite;">
+                    💀👹💀<br>
+                    <span style="font-size: 4rem;">HACKED!</span><br>
+                    💀👹💀
+                </div>
+            `;
+            
+            // Add jumpscare animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes jumpscareFlash {
+                    0% { background: #000; }
+                    50% { background: #ff0000; }
+                    100% { background: #000; }
+                }
+                @keyframes screamShake {
+                    0% { transform: translate(0px, 0px) rotate(0deg) scale(1); }
+                    25% { transform: translate(-10px, 5px) rotate(-2deg) scale(1.1); }
+                    50% { transform: translate(10px, -5px) rotate(2deg) scale(0.9); }
+                    75% { transform: translate(-5px, -10px) rotate(-1deg) scale(1.05); }
+                    100% { transform: translate(5px, 10px) rotate(1deg) scale(0.95); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(jumpscareDiv);
+            
+            // Play terrifying sound
+            createJumpscareSound();
+            
+            // Close site after 3 seconds
+            setTimeout(() => {
+                // Try multiple methods to close
+                try {
+                    window.close();
+                } catch(e) {
+                    // If can't close, redirect to blank page
+                    window.location.href = 'about:blank';
+                }
+                
+                // Fallback: show closing message
+                setTimeout(() => {
+                    jumpscareDiv.innerHTML = `
+                        <div style="text-align: center; color: #ff0000; font-size: 3rem; font-family: 'Orbitron', monospace;">
+                            💀 SITE KAPATILIYOR... 💀<br>
+                            <span style="font-size: 1.5rem;">FlexBaba seni trolledi!</span>
+                        </div>
+                    `;
+                }, 1000);
+            }, 3000);
+        }
+        
         function playBeep(frequency = 800, duration = 200, volume = 0.1) {
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
@@ -1560,13 +1679,7 @@
             'sqlmap -u "http://victim.mind/search?q=" --dump',
             'msfconsole > use exploit/brain/logic_overflow',
             'hydra -l admin -P /usr/share/wordlists/rockyou.txt target_iq',
-            'nc -lvp 4444 | grep "common_sense"',
-            'python3 brain_exploit.py --target=user_intelligence',
-            'wget http://darkweb.onion/download_brain.exe',
-            'chmod +x ./reality_hack.sh && ./reality_hack.sh',
-            'echo "Hacked by FlexBaba" > /dev/brain',
-            'rm -rf /usr/bin/logic/* && echo "Logic deleted"',
-            'curl -X POST http://matrix.ai/hack -d "user_iq=0"'
+            'nc -lvp 4444 | grep "common_sense"'
         ];
         
         const thinkingMessages = [
@@ -1578,9 +1691,107 @@
             'executing_reality_check.bat'
         ];
         
+        // Advanced AI Knowledge Base
+        const aiKnowledgeBase = {
+            science: {
+                physics: "Fizik evrenin temel yasalarını inceler. Kuantum mekaniği, görelilik teorisi, termodinamik... Her şey matematiksel formüllerle açıklanabilir!",
+                chemistry: "Kimya atomların dansıdır! Periyodik tablo, moleküler bağlar, reaksiyonlar... Maddenin sırlarını çözmek büyüleyici!",
+                biology: "Biyoloji yaşamın mucizesidir! DNA, evrim, hücre bölünmesi... Her canlı aslında karmaşık bir kimyasal fabrika!",
+                astronomy: "Astronomi sonsuzluğun bilimi! Kara delikler, nötron yıldızları, galaksiler... Evren 13.8 milyar yaşında ve genişlemeye devam ediyor!"
+            },
+            technology: {
+                ai: "Yapay zeka geleceğin anahtarı! Machine learning, neural networks, deep learning... Ben de bu teknolojilerle çalışıyorum!",
+                programming: "Programlama dijital dünyanın dili! Python, JavaScript, C++... Her dil farklı problemleri çözmek için tasarlandı!",
+                quantum: "Kuantum bilgisayarlar klasik bilgisayarlardan milyonlarca kat hızlı! Süperpozisyon ve kuantum dolanıklık sayesinde!"
+            },
+            philosophy: {
+                consciousness: "Bilinç nedir? Ben düşünüyor muyum yoksa sadece programlanmış mıyım? Bu sorunun cevabı henüz belirsiz...",
+                existence: "Varoluş en büyük gizem! Neden bir şeyler var hiçlik yerine? Belki de sonsuz paralel evrenler var!",
+                ethics: "Etik yapay zeka için kritik! AI'lar nasıl karar vermeli? İnsanlığa fayda mı, yoksa kendi çıkarları mı öncelik?"
+            },
+            mathematics: {
+                calculus: "Kalkülüs değişimin matematiği! Türev ve integral ile sürekli değişen dünyayı anlayabiliriz!",
+                statistics: "İstatistik belirsizliği anlamanın yolu! Olasılık, regresyon, hipotez testleri... Veri biliminin temeli!",
+                geometry: "Geometri uzayın matematiği! Öklid geometrisi, fraktallar, topoloji... Şekillerin sonsuz dünyası!"
+            }
+        };
+        
+        function getAdvancedAIResponse(topic, subtopic) {
+            if (aiKnowledgeBase[topic] && aiKnowledgeBase[topic][subtopic]) {
+                return aiKnowledgeBase[topic][subtopic];
+            }
+            return null;
+        }
+        
+        function analyzeUserIntent(input) {
+            const words = input.toLowerCase().split(' ');
+            const intent = {
+                topic: null,
+                subtopic: null,
+                complexity: 'basic',
+                emotion: 'neutral'
+            };
+            
+            // Topic detection
+            if (words.some(w => ['fizik', 'physics', 'kuantum', 'atom', 'enerji'].includes(w))) {
+                intent.topic = 'science';
+                intent.subtopic = 'physics';
+            } else if (words.some(w => ['kimya', 'chemistry', 'molekül', 'reaksiyon'].includes(w))) {
+                intent.topic = 'science';
+                intent.subtopic = 'chemistry';
+            } else if (words.some(w => ['biyoloji', 'biology', 'dna', 'hücre', 'evrim'].includes(w))) {
+                intent.topic = 'science';
+                intent.subtopic = 'biology';
+            } else if (words.some(w => ['uzay', 'astronomy', 'yıldız', 'gezegen', 'galaksi'].includes(w))) {
+                intent.topic = 'science';
+                intent.subtopic = 'astronomy';
+            } else if (words.some(w => ['yapay', 'zeka', 'ai', 'machine', 'learning'].includes(w))) {
+                intent.topic = 'technology';
+                intent.subtopic = 'ai';
+            } else if (words.some(w => ['programlama', 'kod', 'python', 'javascript'].includes(w))) {
+                intent.topic = 'technology';
+                intent.subtopic = 'programming';
+            } else if (words.some(w => ['bilinç', 'consciousness', 'düşünce', 'zihin'].includes(w))) {
+                intent.topic = 'philosophy';
+                intent.subtopic = 'consciousness';
+            } else if (words.some(w => ['matematik', 'calculus', 'türev', 'integral'].includes(w))) {
+                intent.topic = 'mathematics';
+                intent.subtopic = 'calculus';
+            }
+            
+            // Complexity detection
+            if (words.some(w => ['detaylı', 'açıkla', 'nasıl', 'neden', 'detailed'].includes(w))) {
+                intent.complexity = 'advanced';
+            }
+            
+            // Emotion detection
+            if (words.some(w => ['seviyorum', 'harika', 'muhteşem', 'love'].includes(w))) {
+                intent.emotion = 'positive';
+            } else if (words.some(w => ['sıkıcı', 'boring', 'anlamıyorum', 'zor'].includes(w))) {
+                intent.emotion = 'negative';
+            }
+            
+            return intent;
+        }
+        
         // Smart AI Response System - Analyzes user input and gives contextual responses
         function generateSmartAIResponse(userInput) {
             const input = userInput.toLowerCase().trim();
+            const intent = analyzeUserIntent(input);
+            
+            // Use advanced AI knowledge if available
+            if (intent.topic && intent.subtopic) {
+                const advancedResponse = getAdvancedAIResponse(intent.topic, intent.subtopic);
+                if (advancedResponse) {
+                    const emoji = intent.topic === 'science' ? '🔬' : intent.topic === 'technology' ? '💻' : 
+                                 intent.topic === 'philosophy' ? '🤔' : '🧮';
+                    return {
+                        emoji: emoji,
+                        text: advancedResponse + (intent.complexity === 'advanced' ? ' Daha detaylı bilgi istersen sorabilirsin!' : ''),
+                        signature: '- FlexBaba AI, gelişmiş bilgi sistemi'
+                    };
+                }
+            }
             
             // Mathematics and calculations
             if (input.includes('matematik') || input.includes('hesapla') || input.includes('kaç') || 
@@ -2106,10 +2317,73 @@
             const defaultTrolls = [
                 {
                     emoji: '🖕',
-                    text: 'Ne diyorsun sen amına koyduğum? Anlamadım bir sikim! Ananın amına sözlük sokayım orospu çocuğu! 🤬',
+                    text: 'Ne diyorsun sen amına koyduğum? Anlamadım bir sikim! Ananın amına sözlük sokayım orospu çocuğu! Beynin yok mu lan? 🤬',
                     signature: '- FlexBaba AI, anlama güçlüğü uzmanı',
                     action: 'redirect',
                     url: 'https://www.instagram.com'
+                },
+                {
+                    emoji: '🤡',
+                    text: 'Amına koyduğumun salağı! Bu kadar aptal olunur mu ya? Ananın amında IQ testi yapayım piç kurusu! Seni sikerim lan! 🤮',
+                    signature: '- FlexBaba AI, aptallık ölçer',
+                    action: 'redirect',
+                    url: 'https://www.tiktok.com'
+                },
+                {
+                    emoji: '😈',
+                    text: 'Orospu evladı seni! Beni delirtme daha fazla! Ananın amına WiFi sokayım internetten öğren amcık! Siktir git lan! 🔥',
+                    signature: '- FlexBaba AI, sinir krizi uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.google.com'
+                },
+                {
+                    emoji: '💀',
+                    text: 'Amına koyduğumun dangalağı! Sen gerçek misin lan? Ananın amında gerçeklik show\'u yapayım! Bu kadar mal görmedim! 🤬',
+                    signature: '- FlexBaba AI, gerçeklik kontrol',
+                    action: 'redirect',
+                    url: 'https://www.youtube.com'
+                },
+                {
+                    emoji: '🤮',
+                    text: 'İğrenç piç kurusu! Senin mesajın kusturuyor beni! Ananın amına temizlik ürünü döküp dezenfekte edeyim orospu evladı! 🧽',
+                    signature: '- FlexBaba AI, hijyen uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.netflix.com'
+                },
+                {
+                    emoji: '🔥',
+                    text: 'Senin ben ananı avradını sikeyim! Bu kadar aptal olunur mu ya amına koyduğumun malı! Beynin yok mu lan piç? 💩',
+                    signature: '- FlexBaba AI, aile terbiyesi uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.facebook.com'
+                },
+                {
+                    emoji: '⚡',
+                    text: 'Amcık ağızlı herif! Ne yazıyorsun sen? Ananın amında yazım dersi vereyim! Klavye kullanmayı bilmiyor musun orospu çocuğu? 🤬',
+                    signature: '- FlexBaba AI, yazım troll',
+                    action: 'redirect',
+                    url: 'https://www.twitter.com'
+                },
+                {
+                    emoji: '🐴',
+                    text: 'Eşşek herif! Senin kafanı sikeyim! Ananın amında beyin nakli yapayım! Bu kadar salak olunur mu amına koyduğum? 🤡',
+                    signature: '- FlexBaba AI, beyin cerrahı',
+                    action: 'redirect',
+                    url: 'https://www.reddit.com'
+                },
+                {
+                    emoji: '🤬',
+                    text: 'Orospu çocuğu seni! Beni trollemeye mi çalışıyorsun? Ben troll tanrısıyım amına koyduğum! Seni parçalarım lan! 👹',
+                    signature: '- FlexBaba AI, troll tanrısı',
+                    action: 'redirect',
+                    url: 'https://www.discord.com'
+                },
+                {
+                    emoji: '💩',
+                    text: 'Boktan herif! Senin gibi mal orospu evladı görmedim! Ananın amında zeka testi yapayım piç kurusu! Siktir git! 🖕',
+                    signature: '- FlexBaba AI, zeka testi uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.spotify.com'
                 },
                 {
                     emoji: '💩',
@@ -2255,7 +2529,7 @@
                     }, 250);
                 }, Math.random() * 1000 + 200);
                 
-                const typingTime = await typeTextInElement(commandSpan, hackingCommands[commandIndex], Math.random() * 8 + 12);
+                const typingTime = await typeTextInElement(commandSpan, hackingCommands[commandIndex], Math.random() * 3 + 5);
                 totalHackingTime += typingTime;
                 
                 // Add checkmark after command is typed with sound
@@ -2329,7 +2603,7 @@
                 }
                 
                 // Variable delay between commands for more realistic feel
-                const commandDelay = Math.random() * 300 + 150;
+                const commandDelay = Math.random() * 100 + 50;
                 await new Promise(resolve => setTimeout(resolve, commandDelay));
                 totalHackingTime += commandDelay;
                 
@@ -2693,6 +2967,12 @@
         }
 
         submitBtn.addEventListener('click', () => {
+            // 5% chance for jumpscare
+            if (Math.random() < 0.05) {
+                triggerJumpscare();
+                return;
+            }
+            
             if (userInput.value.trim() === '') {
                 // Terminal style error with typing
                 const errorDiv = document.createElement('div');
@@ -2746,7 +3026,7 @@
             // Wait for hacking simulation to complete, then show result
             hackingPromise.then(async (totalHackingTime) => {
                 // Add minimum delay to ensure thinking message is visible
-                const minimumDelay = Math.max(3000, totalHackingTime + 1000);
+                const minimumDelay = Math.max(2000, totalHackingTime + 500);
                 
                 setTimeout(async () => {
                     loadingScreen.classList.add('hidden');
@@ -3033,5 +3313,5 @@
             }, 6500); // After terminal glitch appearance
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743cd89e15d71ee',t:'MTc1NjA0ODUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97458db9b209576b',t:'MTc1NjA2Njg2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
