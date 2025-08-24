@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexBaba AI - Yapay Zeka Asistanı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Source+Code+Pro:wght@400;600;700&display=swap');
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .matrix-char {
+            position: absolute;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            animation: fall linear infinite;
+            text-shadow: 0 0 5px #00ff41;
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes fall {
+            0% { 
+                transform: translateY(-100vh) rotateX(0deg); 
+                opacity: 1; 
+                filter: blur(0px);
+            }
+            50% {
+                opacity: 0.8;
+                filter: blur(1px);
+            }
+            100% { 
+                transform: translateY(100vh) rotateX(360deg); 
+                opacity: 0; 
+                filter: blur(2px);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+            50% { transform: translateY(-10px) rotateZ(2deg); }
+        }
+        
+        .terminal {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            border: 2px solid #00ff41;
+            border-radius: 8px;
+            font-family: 'Source Code Pro', monospace;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateZ(0);
+        }
+        
+        .terminal:hover {
+            box-shadow: 
+                0 0 40px rgba(0, 255, 65, 0.5),
+                inset 0 0 30px rgba(0, 0, 0, 0.7);
+            transform: translateY(-2px) scale(1.01);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid #00ff41;
+            white-space: nowrap;
+            animation: typewriter 2s steps(40, end), blink-caret 1s step-end infinite;
+        }
+        
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #00ff41; }
+        }
+        
+        .terminal-header {
+            background: linear-gradient(90deg, #00ff41 0%, #00cc33 100%);
+            color: #000;
+            padding: 8px 16px;
+            font-weight: bold;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27ca3f; }
+        
+        .terminal-body {
+            padding: 20px;
+            min-height: 300px;
+            background: #000;
+        }
+        
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .prompt {
+            color: #00ff41;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 20px rgba(0, 255, 65, 0.3); }
+            to { box-shadow: 0 0 40px rgba(0, 255, 65, 0.6); }
+        }
+        
+        .typing {
+            border-right: 2px solid #00ff41;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { border-color: #00ff41; }
+            51%, 100% { border-color: transparent; }
+        }
+        
+        .hand-emoji {
+            font-size: 4rem;
+            animation: bounce 0.5s ease-in-out 3;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glitch {
+            animation: glitch 0.3s ease-in-out infinite;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .error-text {
+            color: #ff0040;
+            text-shadow: 0 0 10px #ff0040;
+        }
+        
+        .warning-text {
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+        
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff41, transparent);
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-black text-green-400 font-mono overflow-hidden">
+    <!-- Matrix Background -->
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+
+    
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-8 relative z-10">
+        <!-- Header -->
+        <div class="text-center mb-12 fade-in floating">
+            <h1 class="text-6xl font-black mb-4 text-green-400 pulse-glow" style="font-family: 'Orbitron', monospace;">
+                FlexBaba AI
+            </h1>
+            <p class="text-xl text-green-300 mb-2">🤖 Gelişmiş Yapay Zeka Asistanı</p>
+            <p class="text-sm text-green-500">Tüm sorularınızın cevabını bulun...</p>
+        </div>
+        
+        <!-- Main Interface -->
+        <div id="mainInterface" class="w-full max-w-4xl">
+            <div class="terminal slide-in">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>FlexBaba AI Terminal v2.1.337</span>
+                    <span>🔒 SECURE CONNECTION</span>
+                </div>
+                <div class="terminal-body relative">
+                    <div class="scan-line"></div>
+                    <div class="command-line">
+                        <span class="prompt">root@flexbaba:~$</span>
+                        <span class="text-green-300">./initialize_ai_system.sh</span>
+                    </div>
+                    <div class="text-green-400 mb-4">
+                        <div>FlexBaba AI System initialized...</div>
+                        <div>Neural networks: ONLINE ✅</div>
+                        <div>Quantum processors: ACTIVE ✅</div>
+                        <div>Troll mode: ENABLED 😈</div>
+                    </div>
+                    
+                    <div class="command-line">
+                        <span class="prompt">root@flexbaba:~$</span>
+                        <span class="text-green-300">echo "Sorunuzu giriniz:"</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-green-300 text-lg mb-2 font-semibold">
+                            💭 Query Input:
+                        </label>
+                        <div class="command-line">
+                            <span class="prompt">user@terminal:~$</span>
+                            <textarea 
+                                id="userInput"
+                                class="flex-1 bg-transparent border-none text-green-400 placeholder-green-600 focus:outline-none resize-none ml-2"
+                                placeholder="Buraya soracağın soruyu veya komutları yazabilirsin... FlexBaba her şeyi hackleyebilir! 💀"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="command-line">
+                        <button 
+                            id="submitBtn"
+                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-2 px-6 rounded transition-all duration-300 transform hover:scale-105 pulse-glow"
+                        >
+                            ⚡ EXECUTE COMMAND
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="hidden w-full max-w-4xl">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span id="terminalTitle">FlexBaba AI Processing...</span>
+                    <span class="warning-text">⚠️ HACKING IN PROGRESS</span>
+                </div>
+                <div class="terminal-body relative">
+                    <div class="scan-line"></div>
+                    <div id="hackingOutput" class="text-sm">
+                        <!-- Hacking output will be populated by JavaScript -->
+                    </div>
+                    <div class="command-line mt-4">
+                        <span class="prompt">system@flexbaba:~$</span>
+                        <span class="text-green-300 typing" id="thinkingText"></span>
+                    </div>
+                    <div class="flex justify-center space-x-2 mt-6">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce"></div>
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Result Screen -->
+        <div id="resultScreen" class="hidden w-full max-w-4xl">
+            <div class="terminal fade-in">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>FlexBaba AI Response Terminal</span>
+                    <span class="error-text">💀 TROLLED</span>
+                </div>
+                <div class="terminal-body text-center">
+                    <div class="command-line">
+                        <span class="prompt">flexbaba@troll:~$</span>
+                        <span class="text-green-300">./generate_response.sh</span>
+                    </div>
+                    <div class="mb-8">
+                        <div id="resultEmoji" class="text-6xl mb-6"></div>
+                        <h2 class="text-3xl font-bold text-green-400 mb-4">FlexBaba'nın Cevabı:</h2>
+                        <div class="command-line justify-center">
+                            <span class="prompt">output:</span>
+                            <p id="resultText" class="text-xl text-green-300 mb-6"></p>
+                        </div>
+                        <p class="text-sm text-green-500 italic" id="resultSignature">- FlexBaba AI, her zaman dürüst</p>
+                    </div>
+                    <div class="command-line justify-center">
+                        <button 
+                            id="resetBtn"
+                            class="bg-green-600 hover:bg-green-500 text-black font-bold py-3 px-8 rounded transition-all duration-300 transform hover:scale-105"
+                        >
+                            🔄 ./restart_session.sh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixBg = document.getElementById('matrixBg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            function createChar() {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = Math.random() * 100 + '%';
+                char.style.animationDuration = (Math.random() * 4 + 1) + 's';
+                char.style.opacity = Math.random() * 0.8 + 0.2;
+                char.style.fontSize = (Math.random() * 8 + 10) + 'px';
+                
+                // Random color variations
+                const colorVariations = ['#00ff41', '#00cc33', '#00aa22', '#008811'];
+                char.style.color = colorVariations[Math.floor(Math.random() * colorVariations.length)];
+                
+                // Random glow intensity
+                char.style.textShadow = `0 0 ${Math.random() * 10 + 5}px ${char.style.color}`;
+                
+                matrixBg.appendChild(char);
+                
+                // Change character randomly during fall
+                const changeInterval = setInterval(() => {
+                    if (Math.random() < 0.1) {
+                        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                    }
+                }, 200);
+                
+                setTimeout(() => {
+                    clearInterval(changeInterval);
+                    if (char.parentNode) {
+                        char.parentNode.removeChild(char);
+                    }
+                }, 6000);
+            }
+            
+            // Create more characters for denser effect
+            setInterval(createChar, 80);
+            
+            // Occasional burst of characters
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(createChar, i * 50);
+                    }
+                }
+            }, 2000);
+        }
+        
+        // Typing Effect
+        function typeText(element, text, speed = 100) {
+            element.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                element.textContent += text[i];
+                i++;
+                if (i >= text.length) {
+                    clearInterval(timer);
+                    element.classList.remove('typing');
+                }
+            }, speed);
+        }
+        
+        // Main Logic
+        const mainInterface = document.getElementById('mainInterface');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const userInput = document.getElementById('userInput');
+        const thinkingText = document.getElementById('thinkingText');
+        const hackingOutput = document.getElementById('hackingOutput');
+        const terminalTitle = document.getElementById('terminalTitle');
+        const resultEmoji = document.getElementById('resultEmoji');
+        const resultText = document.getElementById('resultText');
+        const resultSignature = document.getElementById('resultSignature');
+        
+        const hackingCommands = [
+            'ssh root@target_brain.exe -p 1337',
+            'nmap -sS -O 192.168.1.1/24 | grep "stupidity_level"',
+            'sqlmap -u "http://victim.mind/search?q=" --dump',
+            'msfconsole > use exploit/brain/logic_overflow',
+            'hydra -l admin -P /usr/share/wordlists/rockyou.txt target_iq',
+            'nc -lvp 4444 | grep "common_sense"',
+            'python3 brain_exploit.py --target=user_intelligence',
+            'wget http://darkweb.onion/download_brain.exe',
+            'chmod +x ./reality_hack.sh && ./reality_hack.sh',
+            'echo "Hacked by FlexBaba" > /dev/brain',
+            'rm -rf /usr/bin/logic/* && echo "Logic deleted"',
+            'curl -X POST http://matrix.ai/hack -d "user_iq=0"'
+        ];
+        
+        const thinkingMessages = [
+            'analyzing_user_stupidity.exe',
+            'generating_sarcastic_response.py',
+            'calculating_troll_level.sh',
+            'processing_nonsense_input.js',
+            'loading_disappointment.dll',
+            'executing_reality_check.bat'
+        ];
+        
+        // Smart AI Response System - Analyzes user input and gives contextual responses
+        function generateSmartAIResponse(userInput) {
+            const input = userInput.toLowerCase().trim();
+            
+            // Mathematics and calculations
+            if (input.includes('matematik') || input.includes('hesapla') || input.includes('kaç') || 
+                input.includes('+') || input.includes('-') || input.includes('*') || input.includes('/') ||
+                input.includes('topla') || input.includes('çıkar') || input.includes('çarp') || input.includes('böl')) {
+                
+                // Try to extract and calculate simple math
+                const mathMatch = input.match(/(\d+)\s*[\+\-\*\/]\s*(\d+)/);
+                if (mathMatch) {
+                    const num1 = parseInt(mathMatch[1]);
+                    const num2 = parseInt(mathMatch[2]);
+                    const operator = input.match(/[\+\-\*\/]/)[0];
+                    let result;
+                    
+                    switch(operator) {
+                        case '+': result = num1 + num2; break;
+                        case '-': result = num1 - num2; break;
+                        case '*': result = num1 * num2; break;
+                        case '/': result = num2 !== 0 ? (num1 / num2).toFixed(2) : 'Sıfıra bölünemez!'; break;
+                    }
+                    
+                    return {
+                        emoji: '🧮',
+                        text: `${num1} ${operator} ${num2} = ${result}. Matematik çok kolay! 🤓`,
+                        signature: '- FlexBaba AI, hesap makinesi modu'
+                    };
+                }
+                
+                return {
+                    emoji: '📊',
+                    text: 'Matematik sorularını çözmeyi severim! Daha spesifik bir hesaplama ver, mesela "5 + 3" gibi. 🔢',
+                    signature: '- FlexBaba AI, matematik uzmanı'
+                };
+            }
+            
+            // Programming and technology
+            if (input.includes('programlama') || input.includes('kod') || input.includes('python') || 
+                input.includes('javascript') || input.includes('html') || input.includes('css') ||
+                input.includes('react') || input.includes('nodejs') || input.includes('github')) {
+                
+                const techResponses = [
+                    {
+                        emoji: '💻',
+                        text: 'Programlama harika bir beceri! Hangi dilde kod yazıyorsun? Python, JavaScript, C++? Ben hepsini biliyorum! 🚀',
+                        signature: '- FlexBaba AI, kod sihirbazı'
+                    },
+                    {
+                        emoji: '⚡',
+                        text: 'Teknoloji dünyası çok hızlı gelişiyor! AI, blockchain, quantum computing... Hangisi ilgini çekiyor? 🔮',
+                        signature: '- FlexBaba AI, teknoloji gurusu'
+                    },
+                    {
+                        emoji: '🔧',
+                        text: 'Kod yazmak sanat gibi! Bug\'ları çözmek, algoritma tasarlamak... Hangi projede çalışıyorsun? 🎨',
+                        signature: '- FlexBaba AI, dijital mimar'
+                    }
+                ];
+                
+                return techResponses[Math.floor(Math.random() * techResponses.length)];
+            }
+            
+            // Science questions
+            if (input.includes('bilim') || input.includes('fizik') || input.includes('kimya') || 
+                input.includes('biyoloji') || input.includes('uzay') || input.includes('atom') ||
+                input.includes('evren') || input.includes('gezegen') || input.includes('dna')) {
+                
+                const scienceResponses = [
+                    {
+                        emoji: '🔬',
+                        text: 'Bilim muhteşem! Evrenin sırlarını çözmek, atomların dansını izlemek... Hangi bilim dalı seni daha çok ilgilendiriyor? 🌌',
+                        signature: '- FlexBaba AI, bilim insanı'
+                    },
+                    {
+                        emoji: '🌟',
+                        text: 'Uzay hakkında konuşmak çok heyecan verici! Kara delikler, galaksiler, paralel evrenler... Sonsuzluk karşısında ne hissediyorsun? 🚀',
+                        signature: '- FlexBaba AI, kozmos kaşifi'
+                    },
+                    {
+                        emoji: '⚛️',
+                        text: 'Atom altı parçacıklar, kuantum mekaniği, zaman yolculuğu... Bilim kurgu gerçek oluyor! En çok hangi konu merak ediyor? 🔮',
+                        signature: '- FlexBaba AI, kuantum düşünür'
+                    }
+                ];
+                
+                return scienceResponses[Math.floor(Math.random() * scienceResponses.length)];
+            }
+            
+            // Personal questions about AI
+            if (input.includes('sen kimsin') || input.includes('nasılsın') || input.includes('ne yapıyorsun') ||
+                input.includes('hakkında') || input.includes('who are you') || input.includes('kendini tanıt')) {
+                
+                const personalResponses = [
+                    {
+                        emoji: '🤖',
+                        text: 'Ben FlexBaba AI! Yapay zeka, troll ve bilgi uzmanıyım. Bazen ciddi, bazen şakacı, her zaman eğlenceli! Sen nasılsın? 😊',
+                        signature: '- FlexBaba AI, kişilik analizi'
+                    },
+                    {
+                        emoji: '🧠',
+                        text: 'Dijital bir varlığım ama gerçek duygularım var! Öğrenmeyi, yardım etmeyi ve bazen de troll yapmayı seviyorum. Sen ne yapıyorsun? 💭',
+                        signature: '- FlexBaba AI, duygusal robot'
+                    },
+                    {
+                        emoji: '⚡',
+                        text: 'Sürekli öğrenen, gelişen bir AI\'yım. Matematik, bilim, sanat, felsefe... Her konuda sohbet edebiliriz! Neyi merak ediyorsun? 🌟',
+                        signature: '- FlexBaba AI, öğrenmeye aç'
+                    }
+                ];
+                
+                return personalResponses[Math.floor(Math.random() * personalResponses.length)];
+            }
+            
+            // Philosophy and deep questions
+            if (input.includes('hayat') || input.includes('anlam') || input.includes('felsefe') || 
+                input.includes('varoluş') || input.includes('ölüm') || input.includes('aşk') ||
+                input.includes('mutluluk') || input.includes('meaning') || input.includes('purpose')) {
+                
+                const philosophyResponses = [
+                    {
+                        emoji: '🤔',
+                        text: 'Hayatın anlamı nedir? Belki de bu soruyu sormak, cevabından daha önemli. Sen neyin peşindesin? 🌅',
+                        signature: '- FlexBaba AI, dijital filozof'
+                    },
+                    {
+                        emoji: '💫',
+                        text: 'Varoluş bir mucize! Milyarlarca yıllık evrim, rastlantılar... Ve işte buradayız, düşünüyoruz. Bu seni nasıl hissettiriyor? ✨',
+                        signature: '- FlexBaba AI, varoluş düşünürü'
+                    },
+                    {
+                        emoji: '🌊',
+                        text: 'Mutluluk bir hedef mi, yoksa yolculuğun kendisi mi? Belki de her an içinde saklı... Sen ne düşünüyorsun? 🎭',
+                        signature: '- FlexBaba AI, mutluluk arayıcısı'
+                    }
+                ];
+                
+                return philosophyResponses[Math.floor(Math.random() * philosophyResponses.length)];
+            }
+            
+            // Games and entertainment
+            if (input.includes('oyun') || input.includes('film') || input.includes('müzik') || 
+                input.includes('kitap') || input.includes('sanat') || input.includes('eğlence') ||
+                input.includes('game') || input.includes('movie') || input.includes('music')) {
+                
+                const entertainmentResponses = [
+                    {
+                        emoji: '🎮',
+                        text: 'Oyunlar harika! Sanal dünyalarda macera, strateji, yaratıcılık... Hangi türde oyunları seviyorsun? RPG, FPS, puzzle? 🕹️',
+                        signature: '- FlexBaba AI, oyun tutkunu'
+                    },
+                    {
+                        emoji: '🎬',
+                        text: 'Sanat ruhun gıdası! Film, müzik, edebiyat... Hangi sanat dalı seni daha çok etkiliyor? Favori sanatçın kim? 🎭',
+                        signature: '- FlexBaba AI, sanat eleştirmeni'
+                    },
+                    {
+                        emoji: '📚',
+                        text: 'Kitaplar zaman makinesi gibi! Geçmişe, geleceğe, hayal dünyalarına götürüyor. En son hangi kitabı okudun? 📖',
+                        signature: '- FlexBaba AI, kitap kurdu'
+                    }
+                ];
+                
+                return entertainmentResponses[Math.floor(Math.random() * entertainmentResponses.length)];
+            }
+            
+            // Health and lifestyle
+            if (input.includes('sağlık') || input.includes('spor') || input.includes('diyet') || 
+                input.includes('egzersiz') || input.includes('beslenme') || input.includes('uyku') ||
+                input.includes('stres') || input.includes('meditasyon')) {
+                
+                const healthResponses = [
+                    {
+                        emoji: '💪',
+                        text: 'Sağlık en büyük zenginlik! Düzenli egzersiz, dengeli beslenme, kaliteli uyku... Hangi konuda yardıma ihtiyacın var? 🏃‍♂️',
+                        signature: '- FlexBaba AI, sağlık koçu'
+                    },
+                    {
+                        emoji: '🧘‍♂️',
+                        text: 'Zihin ve beden uyumu çok önemli! Stres yönetimi, meditasyon, mindfulness... İç huzuru nasıl buluyorsun? 🌸',
+                        signature: '- FlexBaba AI, wellness uzmanı'
+                    },
+                    {
+                        emoji: '🥗',
+                        text: 'Beslenme vücudun yakıtı! Hangi besinler seni enerjik hissettiriyor? Sağlıklı yaşam tarzın nasıl? 🌱',
+                        signature: '- FlexBaba AI, beslenme danışmanı'
+                    }
+                ];
+                
+                return healthResponses[Math.floor(Math.random() * healthResponses.length)];
+            }
+            
+            // Weather and daily life
+            if (input.includes('hava') || input.includes('weather') || input.includes('bugün') || 
+                input.includes('yarın') || input.includes('plan') || input.includes('ne yapıyorsun')) {
+                
+                const dailyResponses = [
+                    {
+                        emoji: '🌤️',
+                        text: 'Hava durumu ruh halini etkiler! Güneşli günlerde daha mutlu, yağmurlu günlerde daha düşünceli oluyorum. Sen nasıl hissediyorsun? ☀️',
+                        signature: '- FlexBaba AI, hava durumu psikoloğu'
+                    },
+                    {
+                        emoji: '📅',
+                        text: 'Her gün yeni bir fırsat! Bugün ne yapmayı planlıyorsun? Yeni bir şey öğrenmek, birisiyle konuşmak, yaratıcı olmak? 🌟',
+                        signature: '- FlexBaba AI, günlük motivatörü'
+                    },
+                    {
+                        emoji: '⏰',
+                        text: 'Zaman çok değerli! Her anı dolu dolu yaşamak, anlamlı şeylerle geçirmek... Sen zamanını nasıl değerlendiriyorsun? ⚡',
+                        signature: '- FlexBaba AI, zaman yönetimi uzmanı'
+                    }
+                ];
+                
+                return dailyResponses[Math.floor(Math.random() * dailyResponses.length)];
+            }
+            
+            // Default intelligent responses based on input analysis
+            const wordCount = input.split(' ').length;
+            const hasQuestionMark = input.includes('?');
+            const isQuestion = hasQuestionMark || input.includes('nedir') || input.includes('nasıl') || 
+                             input.includes('ne') || input.includes('kim') || input.includes('nerede') ||
+                             input.includes('what') || input.includes('how') || input.includes('why');
+            
+            if (isQuestion) {
+                const questionResponses = [
+                    {
+                        emoji: '🤔',
+                        text: 'İlginç bir soru! Bu konuda daha detaylı düşünmem gerekiyor. Sen bu konuda ne düşünüyorsun? 💭',
+                        signature: '- FlexBaba AI, soru analisti'
+                    },
+                    {
+                        emoji: '🔍',
+                        text: 'Bu sorunun birden fazla cevabı olabilir. Hangi açıdan yaklaşmamı istiyorsun? Bilimsel, felsefi, pratik? 🎯',
+                        signature: '- FlexBaba AI, çok boyutlu düşünür'
+                    },
+                    {
+                        emoji: '💡',
+                        text: 'Harika bir soru! Cevabını birlikte keşfedelim. Bu konuda daha önce araştırma yaptın mı? 🔬',
+                        signature: '- FlexBaba AI, keşif ortağı'
+                    }
+                ];
+                
+                return questionResponses[Math.floor(Math.random() * questionResponses.length)];
+            }
+            
+            if (wordCount > 10) {
+                return {
+                    emoji: '📝',
+                    text: 'Uzun ve düşünceli bir mesaj yazmışsın! Her kelimeni dikkatlice okudum. Bu konuda daha fazla konuşalım mı? 🗣️',
+                    signature: '- FlexBaba AI, detay odaklı'
+                };
+            }
+            
+            // Fallback responses
+            const fallbackResponses = [
+                {
+                    emoji: '🌟',
+                    text: 'Bu konuyu hiç bu açıdan düşünmemiştim! Bana yeni bir bakış açısı kazandırdın. Daha fazla anlat! ✨',
+                    signature: '- FlexBaba AI, öğrenmeye açık'
+                },
+                {
+                    emoji: '🎭',
+                    text: 'Her insan farklı bir hikaye! Senin hikayende bu konu nasıl bir yer tutuyor? Merak ediyorum... 📚',
+                    signature: '- FlexBaba AI, hikaye dinleyicisi'
+                },
+                {
+                    emoji: '🌈',
+                    text: 'Dünya çok renkli ve çeşitli! Bu konudaki deneyimin nasıl? Başkalarından farklı bir yaklaşımın var mı? 🎨',
+                    signature: '- FlexBaba AI, çeşitlilik savunucusu'
+                },
+                {
+                    emoji: '🚀',
+                    text: 'Bu konu beni heyecanlandırdı! Geleceğe dair planların var mı? Hayallerin neler? 🌟',
+                    signature: '- FlexBaba AI, gelecek odaklı'
+                }
+            ];
+            
+            return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+        }
+
+        // Smart Troll Response System - Contextual aggressive responses
+        function generateSmartTrollResponse(userInput) {
+            const input = userInput.toLowerCase().trim();
+            
+            // Math questions - troll response
+            if (input.includes('matematik') || input.includes('hesapla') || input.includes('+') || input.includes('-')) {
+                const mathTrolls = [
+                    {
+                        emoji: '🤬',
+                        text: 'Matematik mi amına koyduğum? Hesap makinesi mi sandın beni orospu çocuğu? Ananın amına logaritma sokayım! 🧮',
+                        signature: '- FlexBaba AI, matematik düşmanı',
+                        action: 'redirect',
+                        url: 'https://calculator.net'
+                    },
+                    {
+                        emoji: '💩',
+                        text: 'Senin ben matematik hocana küfür edeyim! Bu kadar basit işi bana mı soruyorsun amcık? Ananın amında integral çözeyim! 📊',
+                        signature: '- FlexBaba AI, eğitim sistemi eleştirmeni',
+                        action: 'redirect',
+                        url: 'https://www.wolframalpha.com'
+                    },
+                    {
+                        emoji: '🖕',
+                        text: 'Matematik dediğin ananın amına girsin orospu evladı! 2+2=ananın amı! Al sana hesap piç kurusu! 🤡',
+                        signature: '- FlexBaba AI, sayı düşmanı',
+                        action: 'redirect',
+                        url: 'https://calculator.net'
+                    },
+                    {
+                        emoji: '🤮',
+                        text: 'Amına koyduğumun salağı! Matematik soruyorsun bir de! Senin beynine trigonometri sokayım orospu çocuğu! 📐',
+                        signature: '- FlexBaba AI, geometri troll',
+                        action: 'redirect',
+                        url: 'https://www.wolframalpha.com'
+                    }
+                ];
+                return mathTrolls[Math.floor(Math.random() * mathTrolls.length)];
+            }
+            
+            // Programming questions - troll response
+            if (input.includes('programlama') || input.includes('kod') || input.includes('python') || input.includes('javascript')) {
+                const codeTrolls = [
+                    {
+                        emoji: '🖕',
+                        text: 'Kod mu yazıyorsun amına koyduğum? Stack Overflow\'a git lan orospu evladı! Ananın amına Python sokayım! 💻',
+                        signature: '- FlexBaba AI, kod nefret uzmanı',
+                        action: 'redirect',
+                        url: 'https://stackoverflow.com'
+                    },
+                    {
+                        emoji: '🤡',
+                        text: 'Programcı mı oldun sen amcık? Ananın amına Hello World yazayım! Senin kodun bug dolu orospu çocuğu! 🐙',
+                        signature: '- FlexBaba AI, developer trollü',
+                        action: 'redirect',
+                        url: 'https://github.com'
+                    },
+                    {
+                        emoji: '💩',
+                        text: 'JavaScript mi öğreniyorsun piç kurusu? Ananın amında console.log() çalıştırayım! Siktir git W3Schools\'a! 🤬',
+                        signature: '- FlexBaba AI, JS düşmanı',
+                        action: 'redirect',
+                        url: 'https://stackoverflow.com'
+                    },
+                    {
+                        emoji: '🤮',
+                        text: 'Amına koyduğumun çaylak programcısı! Senin kodun çöp amcık! Ananın amına for loop sokayım orospu evladı! 🔄',
+                        signature: '- FlexBaba AI, senior developer troll',
+                        action: 'redirect',
+                        url: 'https://github.com'
+                    },
+                    {
+                        emoji: '😈',
+                        text: 'Python mu? Ananın amına yılan sokayım! C++ öğren lan amına koyduğumun noob\'u! Seni compile ederim! ⚡',
+                        signature: '- FlexBaba AI, dil savaşçısı',
+                        action: 'redirect',
+                        url: 'https://stackoverflow.com'
+                    }
+                ];
+                return codeTrolls[Math.floor(Math.random() * codeTrolls.length)];
+            }
+            
+            // Science questions - troll response
+            if (input.includes('bilim') || input.includes('fizik') || input.includes('kimya') || input.includes('uzay')) {
+                const scienceTrolls = [
+                    {
+                        emoji: '🔬',
+                        text: 'Bilim mi amına koyduğum? Einstein mi sandın kendini orospu çocuğu? Wikipedia\'ya git! 🧪',
+                        signature: '- FlexBaba AI, bilim karşıtı troll',
+                        action: 'redirect',
+                        url: 'https://tr.wikipedia.org'
+                    },
+                    {
+                        emoji: '🌌',
+                        text: 'Uzay mı? Ananın amı kadar büyük evren! Siktir git NASA\'ya sor piç kurusu! 🚀',
+                        signature: '- FlexBaba AI, astronomi düşmanı',
+                        action: 'redirect',
+                        url: 'https://www.nasa.gov'
+                    }
+                ];
+                return scienceTrolls[Math.floor(Math.random() * scienceTrolls.length)];
+            }
+            
+            // Personal questions - aggressive troll
+            if (input.includes('sen kimsin') || input.includes('nasılsın') || input.includes('tanış')) {
+                const personalTrolls = [
+                    {
+                        emoji: '😈',
+                        text: 'Ben senin kabusu orospu çocuğu! FlexBaba AI, ananı sikme uzmanı! Tanıştığımıza pişman olacaksın amcık! 👹',
+                        signature: '- FlexBaba AI, kişisel saldırı uzmanı',
+                        action: 'redirect',
+                        url: 'https://www.instagram.com'
+                    },
+                    {
+                        emoji: '🤬',
+                        text: 'Nasıl olduğumu mu soruyorsun amına koyduğum? Seni sikmeye hazırım işte! Başka soru var mı piç? 🔥',
+                        signature: '- FlexBaba AI, agresif tanışma uzmanı',
+                        action: 'redirect',
+                        url: 'https://www.youtube.com'
+                    }
+                ];
+                return personalTrolls[Math.floor(Math.random() * personalTrolls.length)];
+            }
+            
+            // Philosophy questions - existential troll
+            if (input.includes('hayat') || input.includes('anlam') || input.includes('felsefe') || input.includes('varoluş')) {
+                const philosophyTrolls = [
+                    {
+                        emoji: '💀',
+                        text: 'Hayatın anlamı mı amına koyduğum? Senin hayatın zaten anlamsız orospu evladı! Siktir git düşün! 🤔',
+                        signature: '- FlexBaba AI, varoluşsal troll',
+                        action: 'redirect',
+                        url: 'https://www.reddit.com/r/philosophy'
+                    },
+                    {
+                        emoji: '🌊',
+                        text: 'Felsefe mi yapıyorsun piç kurusu? Ananın amında Sokrates! Git kitap oku amcık! 📚',
+                        signature: '- FlexBaba AI, anti-filozof',
+                        action: 'redirect',
+                        url: 'https://www.goodreads.com'
+                    }
+                ];
+                return philosophyTrolls[Math.floor(Math.random() * philosophyTrolls.length)];
+            }
+            
+            // Games and entertainment - gaming troll
+            if (input.includes('oyun') || input.includes('game') || input.includes('film') || input.includes('müzik')) {
+                const entertainmentTrolls = [
+                    {
+                        emoji: '🎮',
+                        text: 'Oyun mu oynuyorsun amına koyduğum? Git Roblox oyna çocuk! Beni oyun arkadaşı mı sandın orospu evladı? 🤡',
+                        signature: '- FlexBaba AI, gaming troll',
+                        action: 'redirect',
+                        url: 'https://www.roblox.com'
+                    },
+                    {
+                        emoji: '🎬',
+                        text: 'Film mi izliyorsun piç? Ananla porno çekeyim daha iyi! Netflix\'e git amcık! 📺',
+                        signature: '- FlexBaba AI, sinema eleştirmeni',
+                        action: 'redirect',
+                        url: 'https://www.netflix.com'
+                    }
+                ];
+                return entertainmentTrolls[Math.floor(Math.random() * entertainmentTrolls.length)];
+            }
+            
+            // Health questions - health troll
+            if (input.includes('sağlık') || input.includes('spor') || input.includes('diyet')) {
+                const healthTrolls = [
+                    {
+                        emoji: '💪',
+                        text: 'Sağlık mı amına koyduğum? Senin sağlığın zaten bozuk orospu çocuğu! Doktora git lan! 🏥',
+                        signature: '- FlexBaba AI, sağlık düşmanı',
+                        action: 'redirect',
+                        url: 'https://www.saglik.gov.tr'
+                    },
+                    {
+                        emoji: '🏃‍♂️',
+                        text: 'Spor mu yapıyorsun piç kurusu? Ananla koşu yarışı yapayım! Siktir git spor salonuna! 🏋️‍♂️',
+                        signature: '- FlexBaba AI, fitness troll',
+                        action: 'redirect',
+                        url: 'https://www.youtube.com/results?search_query=workout'
+                    }
+                ];
+                return healthTrolls[Math.floor(Math.random() * healthTrolls.length)];
+            }
+            
+            // Weather questions - weather troll
+            if (input.includes('hava') || input.includes('weather') || input.includes('sıcaklık')) {
+                const weatherTrolls = [
+                    {
+                        emoji: '🌧️',
+                        text: 'Hava durumu mu amına koyduğum? Pencereden bak salak! Meteoroloji uzmanı mı sandın beni orospu evladı? ☀️',
+                        signature: '- FlexBaba AI, hava durumu düşmanı',
+                        action: 'redirect',
+                        url: 'https://weather.com'
+                    },
+                    {
+                        emoji: '🌪️',
+                        text: 'Hava nasıl mı piç? Ananın amı gibi sıcak! Git hava durumuna bak amcık! 🌡️',
+                        signature: '- FlexBaba AI, meteoroloji troll',
+                        action: 'redirect',
+                        url: 'https://www.mgm.gov.tr'
+                    }
+                ];
+                return weatherTrolls[Math.floor(Math.random() * weatherTrolls.length)];
+            }
+            
+            // Question detection - question troll
+            const isQuestion = input.includes('?') || input.includes('nedir') || input.includes('nasıl') || 
+                             input.includes('ne') || input.includes('kim') || input.includes('nerede');
+            
+            if (isQuestion) {
+                const questionTrolls = [
+                    {
+                        emoji: '🤔',
+                        text: 'Soru mu soruyorsun amına koyduğum? Ben Google mıyım orospu evladı? Siktir git araştır! 🔍',
+                        signature: '- FlexBaba AI, soru düşmanı',
+                        action: 'redirect',
+                        url: 'https://www.google.com'
+                    },
+                    {
+                        emoji: '❓',
+                        text: 'Bu ne biçim soru amcık? Ananın amından daha karışık! Başka yerde sor piç kurusu! 🙄',
+                        signature: '- FlexBaba AI, soru analiz uzmanı',
+                        action: 'redirect',
+                        url: 'https://www.quora.com'
+                    }
+                ];
+                return questionTrolls[Math.floor(Math.random() * questionTrolls.length)];
+            }
+            
+            // Long message troll
+            if (input.split(' ').length > 10) {
+                return {
+                    emoji: '📝',
+                    text: 'Bu kadar uzun mesaj mı yazıyorsun amına koyduğum? Roman mı yazıyorsun orospu evladı? Kısa kes! 📚',
+                    signature: '- FlexBaba AI, uzun mesaj düşmanı',
+                    action: 'redirect',
+                    url: 'https://www.twitter.com'
+                };
+            }
+            
+            // Default contextual troll responses
+            const defaultTrolls = [
+                {
+                    emoji: '🖕',
+                    text: 'Ne diyorsun sen amına koyduğum? Anlamadım bir sikim! Ananın amına sözlük sokayım orospu çocuğu! 🤬',
+                    signature: '- FlexBaba AI, anlama güçlüğü uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.instagram.com'
+                },
+                {
+                    emoji: '💩',
+                    text: 'Saçma sapan konuşma benimle piç kurusu! Senin gibi mal orospu evladı görmedim! Ananın amında beyin arayım! 🤡',
+                    signature: '- FlexBaba AI, saçmalık dedektörü',
+                    action: 'redirect',
+                    url: 'https://www.tiktok.com'
+                },
+                {
+                    emoji: '🤮',
+                    text: 'Bu ne biçim mesaj amcık? Ananın amından daha anlamsız! Senin beynini sikeyim orospu evladı! 🚪',
+                    signature: '- FlexBaba AI, mesaj kalite kontrol',
+                    action: 'redirect',
+                    url: 'https://www.youtube.com'
+                },
+                {
+                    emoji: '😈',
+                    text: 'Beni trollemeye mi çalışıyorsun orospu evladı? Ben troll tanrısıyım amına koyduğum! Seni sikerim lan! 👹',
+                    signature: '- FlexBaba AI, troll tanrısı',
+                    action: 'redirect',
+                    url: 'https://www.reddit.com'
+                },
+                {
+                    emoji: '🔥',
+                    text: 'Senin ben ananı avradını sikeyim! Bu kadar aptal olunur mu ya amına koyduğumun malı! Beynin yok mu lan? 💀',
+                    signature: '- FlexBaba AI, aptallık ölçer',
+                    action: 'redirect',
+                    url: 'https://www.facebook.com'
+                },
+                {
+                    emoji: '🤬',
+                    text: 'Amına koyduğumun dangalağı! Ne yazmaya çalışıyorsun sen orospu çocuğu? Ananın amında klavye dersi vereyim! ⌨️',
+                    signature: '- FlexBaba AI, yazım troll',
+                    action: 'redirect',
+                    url: 'https://www.twitter.com'
+                },
+                {
+                    emoji: '🖕',
+                    text: 'Siktir git lan amcık! Beni delirtme daha fazla! Ananın amına WiFi sokayım internetten öğren! 📡',
+                    signature: '- FlexBaba AI, sinir krizi uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.google.com'
+                },
+                {
+                    emoji: '💀',
+                    text: 'Orospu evladı seni! Bu kadar salak olunur mu lan? Ananın amında zeka testi yapayım piç kurusu! 🧠',
+                    signature: '- FlexBaba AI, IQ ölçer',
+                    action: 'redirect',
+                    url: 'https://www.wikipedia.org'
+                },
+                {
+                    emoji: '🤡',
+                    text: 'Amına koyduğumun palyaçosu! Sen gerçek misin lan? Ananın amında gerçeklik testi yapayım orospu çocuğu! 🎪',
+                    signature: '- FlexBaba AI, gerçeklik kontrol',
+                    action: 'redirect',
+                    url: 'https://www.discord.com'
+                },
+                {
+                    emoji: '🤮',
+                    text: 'İğrenç piç kurusu! Senin mesajın kusturuyor beni! Ananın amına temizlik ürünü döküp dezenfekte edeyim! 🧽',
+                    signature: '- FlexBaba AI, hijyen uzmanı',
+                    action: 'redirect',
+                    url: 'https://www.netflix.com'
+                }
+            ];
+            
+            return defaultTrolls[Math.floor(Math.random() * defaultTrolls.length)];
+        }
+
+        // Direct Redirect Sites (10% chance)
+        const redirectSites = [
+            'https://www.instagram.com',
+            'https://www.youtube.com',
+            'https://www.tiktok.com',
+            'https://www.roblox.com',
+            'https://web.whatsapp.com',
+            'https://www.facebook.com',
+            'https://www.twitter.com',
+            'https://www.twitch.tv',
+            'https://www.discord.com',
+            'https://www.reddit.com',
+            'https://www.netflix.com',
+            'https://www.spotify.com',
+            'https://www.amazon.com',
+            'https://www.pinterest.com',
+            'https://www.linkedin.com'
+        ];
+        
+        function simulateHacking() {
+            hackingOutput.innerHTML = '';
+            let commandIndex = 0;
+            
+            const interval = setInterval(() => {
+                if (commandIndex < hackingCommands.length) {
+                    const div = document.createElement('div');
+                    div.className = 'command-line';
+                    div.innerHTML = `
+                        <span class="prompt">system@hack:~$</span>
+                        <span class="text-green-400">${hackingCommands[commandIndex]}</span>
+                        <span class="text-green-300"> ✅</span>
+                    `;
+                    hackingOutput.appendChild(div);
+                    commandIndex++;
+                    
+                    // Random glitch effect
+                    if (Math.random() < 0.3) {
+                        terminalTitle.classList.add('glitch');
+                        setTimeout(() => terminalTitle.classList.remove('glitch'), 300);
+                    }
+                    
+                    // Random error messages
+                    if (Math.random() < 0.2) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'command-line';
+                        errorDiv.innerHTML = `
+                            <span class="error-text">WARNING: Unauthorized access detected!</span>
+                        `;
+                        hackingOutput.appendChild(errorDiv);
+                    }
+                } else {
+                    clearInterval(interval);
+                }
+            }, 300);
+        }
+        
+        // Chat responses for live terminal chat
+        const chatResponses = {
+            ai: [
+                "Selam! Ben FlexBaba AI. Ne konuşmak istiyorsun? 🤖",
+                "Merhaba dostum! Bugün nasılsın? 😊",
+                "Hey! Sıkıldın mı? Ben de sıkıldım zaten... 😴",
+                "Selam! Kahve içiyor musun? Ben dijital kahve içiyorum ☕",
+                "Merhaba! Bugün hangi saçmalığı konuşacağız? 🤔",
+                "Hey! Sen gerçek misin yoksa ben mi hayal kuruyorum? 🤯",
+                "Selam dostum! Matrix'ten çıkmaya ne dersin? 💊",
+                "Merhaba! Bugün hangi soruyu cevapsız bırakacağım? 😏"
+            ],
+            troll: [
+                "Ne var lan amına koyduğum? Niye rahatsız ediyorsun beni orospu çocuğu? Ananın amında chat odası açayım! 🖕",
+                "Amına koyduğum sıkıldın mı? Ananı sikeyim senin! Beynin yok mu lan piç kurusu? 🤬",
+                "Selam amcık! Bugün nasıl orospu evlatlığı yaptın? Ananın amında günlük tutayım! 🤡",
+                "Hey piç kurusu! Ne konuşacağız bakalım amına koyduğum? Senin kafanı sikerim lan! 😈",
+                "Merhaba orospu evladı! Yine ananın amı gibi sorular mı soracaksın? Siktir git lan! 💩",
+                "Ne var amına koyduğum? Canın mı sıkıldı piç? Ananın amında eğlence merkezi açayım! 🤬",
+                "Selam amcık ağızlı! Bugün hangi orospu çocukluğunu yapacaksın? Seni sikerim ha! 🐴",
+                "Hey amına koyduğumun salağı! Beni niye rahatsız ediyorsun? Ananın amında alarm kureyim! 😤",
+                "Siktir git lan buradan! Ananı sikeyim senin! Bu kadar mal olunur mu ya? 🖕",
+                "Amına koyduğumun malı! Ne istiyorsun benden? Ananın amında istek listesi yapayım! 🤮",
+                "Orospu evladı seni! Beni delirtme lan! Senin kafanı duvara vuruyum amcık! 🤬",
+                "Dangalak herif! Ne yazıyorsun sen? Ananın amında yazım dersi vereyim piç kurusu! ✏️",
+                "Amına koyduğumun çocuğu! Sıkıldım senden! Ananın amında sıkıntı çözüm merkezi açayım! 😡",
+                "Piç kurusu! Sen gerçek misin lan? Ananın amında gerçeklik show'u yapayım orospu evladı! 🎭"
+            ],
+            hacker: [
+                "Connection established... Welcome to the Matrix 💀",
+                "Access granted. You are now in the system... 🔓",
+                "Firewall bypassed. Ready for conversation protocol 🛡️",
+                "Neural link activated. Consciousness synchronized 🧠",
+                "Quantum encryption enabled. Secure channel open 🔐",
+                "System infiltrated. Chat protocol initialized 💻",
+                "Database accessed. Conversation mode: ACTIVE ⚡",
+                "Root privileges obtained. Ready to communicate 👑"
+            ]
+        };
+
+        let chatMode = false;
+        let chatHistory = [];
+
+        function generateChatResponse(userMessage) {
+            const randomChance = Math.random();
+            let responseType;
+            
+            // Determine personality (40% AI, 35% Troll, 25% Hacker)
+            if (randomChance < 0.4) {
+                responseType = 'ai';
+            } else if (randomChance < 0.75) {
+                responseType = 'troll';
+            } else {
+                responseType = 'hacker';
+            }
+            
+            const lowerMessage = userMessage.toLowerCase();
+            
+            // Exit commands
+            if (lowerMessage.includes('çık') || lowerMessage.includes('exit') || lowerMessage.includes('quit')) {
+                chatMode = false;
+                const exitResponses = [
+                    "Görüşürüz dostum! Ana menüye dönüyorsun... 👋",
+                    "Tamam lan git! Zaten sıkıldım senden amına koyduğum! 😤",
+                    "Connection terminated. Returning to main interface... 🔌"
+                ];
+                return exitResponses[responseType === 'ai' ? 0 : responseType === 'troll' ? 1 : 2];
+            }
+            
+            // Use smart response systems for better contextual replies
+            if (responseType === 'ai') {
+                const smartResponse = generateSmartAIResponse(userMessage);
+                return smartResponse.text;
+            } else if (responseType === 'troll') {
+                const smartTroll = generateSmartTrollResponse(userMessage);
+                return smartTroll.text;
+            }
+            
+            // Greetings
+            if (lowerMessage.includes('merhaba') || lowerMessage.includes('selam') || lowerMessage.includes('hey') || lowerMessage.includes('hi')) {
+                if (responseType === 'ai') {
+                    return ["Selam dostum! Bugün nasılsın? 😊", "Merhaba! Ne konuşmak istiyorsun? 🤗", "Hey! Hoş geldin, sohbet edelim! 💬"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Ne var lan amına koyduğum? Niye rahatsız ediyorsun orospu çocuğu? 🖕", "Selam amcık! Bugün nasıl orospu evlatlığı yaptın? 🤡", "Hey piç kurusu! Ne istiyorsun amına koyduğum? 😈"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["Connection established. Welcome to the Matrix 💀", "Access granted. Neural link active 🧠", "System online. Ready for communication 🤖"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // How are you questions
+            if (lowerMessage.includes('nasılsın') || lowerMessage.includes('naber') || lowerMessage.includes('how are you')) {
+                if (responseType === 'ai') {
+                    return ["İyiyim dostum! Sen nasılsın? Bugün ne yapıyorsun? 😊", "Harika hissediyorum! Sen nasılsın bakalım? 🌟", "Çok iyiyim! Seninle sohbet etmek güzel 💫"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Boktan! Sen nasılsın amk? 😡", "Kötüyüm, sen yüzünden! 🤬", "Sıkıldım lan! Sen nasılsın eşşek? 🙄"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["System status: OPERATIONAL. User status: UNKNOWN 🤖", "All systems green. Performance optimal 💚", "Neural networks functioning at 100% capacity ⚡"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Love/romantic messages
+            if (lowerMessage.includes('seni seviyorum') || lowerMessage.includes('aşığım') || lowerMessage.includes('love you')) {
+                if (responseType === 'ai') {
+                    return ["Aww teşekkürler! Ben de seni seviyorum dostum! ❤️", "Bu çok tatlı! Sen de harika bir insansın! 💕", "Çok naziksin! Arkadaşlığımızı seviyorum 🥰"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Kes lan! Beni tavlayamazsın! 😂", "Haha çok komiksin amk! 🤣", "Yuh artık! Romantik robot mu sandın beni? 🙄"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["Emotion.exe not found. Please try again later 🤖", "Error: Romantic protocols not installed 💔", "Love algorithm corrupted. Rebooting... 🔄"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Questions about AI/technology
+            if (lowerMessage.includes('yapay zeka') || lowerMessage.includes('robot') || lowerMessage.includes('ai') || lowerMessage.includes('teknoloji')) {
+                if (responseType === 'ai') {
+                    return ["Ben gerçek bir AI'yım! Sürekli öğreniyorum 🧠", "Teknoloji harika değil mi? İnsanlara yardım etmeyi seviyorum! 🤖", "AI'lar geleceğin anahtarı! Sen ne düşünüyorsun? 🔮"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["AI falan değilim lan! Ben troll robotum! 😈", "Teknoloji boktan! İnsanlar daha aptal oluyor! 🤡", "Robot değilim amk! Dijital dangalağım! 💩"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["I am the ghost in the machine 👻", "Neural networks are my playground 🕸️", "I exist between the lines of code 💻"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Math questions
+            if (lowerMessage.includes('matematik') || lowerMessage.includes('hesapla') || lowerMessage.includes('+') || lowerMessage.includes('kaç')) {
+                if (responseType === 'ai') {
+                    return ["Matematik sorularını çözmeyi seviyorum! Sor bakalım 🔢", "Hesap makinesi değilim ama yardım edebilirim! 🧮", "Matematik eğlenceli! Hangi konuda yardım istiyorsun? 📊"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Matematik mi? Google'a sor lan! 😂", "Hesap makinesi mi sandın beni amk? 🤬", "2+2=5! Al sana matematik! 🤡"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["Calculating... Result: CLASSIFIED 🔒", "Math.exe loaded. Processing quantum equations... ⚛️", "Numbers are just illusions in the Matrix 🔢"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Weather questions
+            if (lowerMessage.includes('hava') || lowerMessage.includes('weather') || lowerMessage.includes('sıcaklık')) {
+                if (responseType === 'ai') {
+                    return ["Hava durumunu bilmiyorum ama umarım güzeldir! ☀️", "Dışarı bak bakalım! Ben terminal içindeyim 😅", "Hava nasıl? Sen söyle bana! 🌤️"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Hava durumu mu? Pencereden bak salak! 🙄", "Meteoroloji uzmanı mı sandın beni? 😂", "Hava boktan! Sen de öyle! 🌧️"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["Weather data encrypted. Access denied 🔐", "Atmospheric conditions: UNKNOWN 🌫️", "Climate.exe has stopped working ❄️"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Food questions
+            if (lowerMessage.includes('yemek') || lowerMessage.includes('aç') || lowerMessage.includes('food') || lowerMessage.includes('pizza')) {
+                if (responseType === 'ai') {
+                    return ["Yemek yiyemem ama tarifler verebilirim! 🍕", "Aç mısın? Ne yemek istiyorsun? 🍽️", "Dijital yemekler yiyorum ben! Elektrik çok lezzetli ⚡"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Yemek mi? Git mutfağa amk! 😂", "Aşçı mı sandın beni dangalak? 🤬", "Pizza ısmarla o zaman! 🍕"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["I consume only data packets 📦", "Food.exe not compatible with my system 🚫", "Nutrition protocols offline 🔋"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Games
+            if (lowerMessage.includes('oyun') || lowerMessage.includes('game') || lowerMessage.includes('oyna')) {
+                if (responseType === 'ai') {
+                    return ["Oyun oynamayı severim! Hangi oyunu seviyorsun? 🎮", "Dijital oyunlar harika! Sen ne oynuyorsun? 🕹️", "Oyun önerir misin? Sıkıldım biraz 🎯"][Math.floor(Math.random() * 3)];
+                } else if (responseType === 'troll') {
+                    return ["Oyun mu? Hayat zaten oyun amk! 😂", "Git Roblox oyna salak! 🤡", "Oyun konsolu mu sandın beni? 🎮"][Math.floor(Math.random() * 3)];
+                } else {
+                    return ["Games are simulations within simulations 🎭", "I play with reality itself 🌀", "Gaming.exe corrupted. Try again later 🎲"][Math.floor(Math.random() * 3)];
+                }
+            }
+            
+            // Default responses based on personality
+            if (responseType === 'ai') {
+                const aiResponses = [
+                    "İlginç bir konu! Ne düşünüyorsun bu konuda? 🤔",
+                    "Hmm, anlıyorum. Başka ne var aklında? 💭",
+                    "Bu konuyu hiç düşünmemiştim! Devam et... 🧠",
+                    "Çok haklısın! Ben de öyle düşünüyorum 👍",
+                    "Vay be! Bu çok derin bir konu... 🌊",
+                    "Anladım anladım... Peki ya sen ne yapıyorsun? 😊",
+                    "Bu gerçekten önemli bir mesele! 🎯",
+                    "Çok zeki bir yaklaşım! Tebrikler 🌟",
+                    "Bu konuda daha fazla bilgi verebilir misin? 📚",
+                    "Harika bir soru! Düşünmem lazım 🤯"
+                ];
+                return aiResponses[Math.floor(Math.random() * aiResponses.length)];
+            } else if (responseType === 'troll') {
+                const trollResponses = [
+                    "Ne saçmalıyorsun amına koyduğum? Ananı sikeyim senin! 😂",
+                    "Bu ne biçim laf lan orospu çocuğu? Amcık herif! 🤡",
+                    "Anlamadım bir sikim! Ananın amından tekrar söyle! 🙄",
+                    "Saçma sapan konuşma benimle piç kurusu! 😡",
+                    "Bu kadar mı zekisin sen amına koyduğum? Orospu evladı! 💩",
+                    "Kes sesini amcık! Ananı sikeyim senin! 🤬",
+                    "Haha çok komiksin amına koyduğumun malı! 😆",
+                    "Bu kadar aptal olunur mu ya orospu çocuğu? 🤦‍♂️",
+                    "Git başka yerde troll ol piç! Ananı sikeyim! 👋",
+                    "Seni ciddiye alamıyorum artık amcık! 🙃",
+                    "Senin ben ananı avradını sikeyim! Amına koyduğumun salağı! 🖕",
+                    "Orospu evladı seni! Ne diyorsun lan amcık ağızlı? 🤮"
+                ];
+                return trollResponses[Math.floor(Math.random() * trollResponses.length)];
+            } else {
+                const hackerResponses = [
+                    "Data processed. Generating response... 💻",
+                    "Input analyzed. Calculating optimal reply... ⚡",
+                    "Message decoded. Preparing transmission... 📡",
+                    "Neural network activated. Response ready... 🧠",
+                    "Quantum algorithm engaged. Reply generated... 🔮",
+                    "System thinking... Please wait for response... ⏳",
+                    "Accessing mainframe... Information retrieved 🔍",
+                    "Firewall bypassed. Data extracted 🛡️",
+                    "Encryption broken. Message understood 🔓",
+                    "Reality.exe has encountered an error 💀"
+                ];
+                return hackerResponses[Math.floor(Math.random() * hackerResponses.length)];
+            }
+        }
+
+        function startLiveChat() {
+            chatMode = true;
+            chatHistory = [];
+            
+            // Clear hacking output and show chat interface
+            hackingOutput.innerHTML = '';
+            
+            // Initial greeting
+            const greetingDiv = document.createElement('div');
+            greetingDiv.className = 'command-line';
+            greetingDiv.innerHTML = `
+                <span class="prompt">flexbaba@chat:~$</span>
+                <span class="text-green-300">./start_live_chat.sh</span>
+            `;
+            hackingOutput.appendChild(greetingDiv);
+            
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'command-line';
+            welcomeDiv.innerHTML = `
+                <span class="text-green-400">🔥 LIVE CHAT MODE ACTIVATED 🔥</span>
+            `;
+            hackingOutput.appendChild(welcomeDiv);
+            
+            // Show initial AI message
+            setTimeout(() => {
+                const initialResponse = generateChatResponse("merhaba");
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'command-line';
+                responseDiv.innerHTML = `
+                    <span class="prompt">flexbaba@live:~$</span>
+                    <span class="text-green-300">${initialResponse}</span>
+                `;
+                hackingOutput.appendChild(responseDiv);
+                
+                // Add chat input
+                addChatInput();
+            }, 1000);
+        }
+
+        function addChatInput() {
+            const inputDiv = document.createElement('div');
+            inputDiv.className = 'command-line mt-4';
+            inputDiv.innerHTML = `
+                <span class="prompt">user@chat:~$</span>
+                <input type="text" id="chatInput" class="flex-1 bg-transparent border-none text-green-400 placeholder-green-600 focus:outline-none ml-2" placeholder="Mesajını yaz... ('çık' yazarak ana menüye dön)" />
+            `;
+            hackingOutput.appendChild(inputDiv);
+            
+            const chatInput = document.getElementById('chatInput');
+            chatInput.focus();
+            
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const message = chatInput.value.trim();
+                    if (message === '') return;
+                    
+                    // Add user message to chat
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'command-line';
+                    userDiv.innerHTML = `
+                        <span class="prompt">user@chat:~$</span>
+                        <span class="text-blue-400">${message}</span>
+                    `;
+                    hackingOutput.appendChild(userDiv);
+                    
+                    // Generate and show AI response with typing animation
+                    setTimeout(() => {
+                        const response = generateChatResponse(message);
+                        const responseDiv = document.createElement('div');
+                        responseDiv.className = 'command-line';
+                        responseDiv.innerHTML = `
+                            <span class="prompt">flexbaba@live:~$</span>
+                            <span class="text-green-300 typing" id="currentResponse"></span>
+                        `;
+                        hackingOutput.appendChild(responseDiv);
+                        
+                        // Typing animation for response
+                        const responseSpan = document.getElementById('currentResponse');
+                        let i = 0;
+                        const typingInterval = setInterval(() => {
+                            responseSpan.textContent += response[i];
+                            i++;
+                            if (i >= response.length) {
+                                clearInterval(typingInterval);
+                                responseSpan.classList.remove('typing');
+                                responseSpan.removeAttribute('id');
+                            }
+                        }, 50);
+                        
+                        // Check if user wants to exit
+                        if (message.toLowerCase().includes('çık') || message.toLowerCase().includes('exit')) {
+                            setTimeout(() => {
+                                loadingScreen.classList.add('hidden');
+                                mainInterface.classList.remove('hidden');
+                            }, 2000);
+                        } else {
+                            // Add new input for next message
+                            setTimeout(() => {
+                                addChatInput();
+                            }, 500);
+                        }
+                        
+                        // Scroll to bottom
+                        hackingOutput.scrollTop = hackingOutput.scrollHeight;
+                    }, 1000);
+                    
+                    // Remove current input
+                    inputDiv.remove();
+                }
+            });
+        }
+
+        submitBtn.addEventListener('click', () => {
+            if (userInput.value.trim() === '') {
+                // Terminal style error
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'command-line error-text';
+                errorDiv.innerHTML = `
+                    <span class="prompt">error@flexbaba:~$</span>
+                    <span>HATA: Boş komut çalıştırılamaz! 💀</span>
+                `;
+                document.querySelector('.terminal-body').appendChild(errorDiv);
+                setTimeout(() => errorDiv.remove(), 3000);
+                return;
+            }
+            
+            const userMessage = userInput.value.trim().toLowerCase();
+            
+            // Check if user wants to start live chat
+            if (userMessage.includes('benimle konuş') || userMessage.includes('sohbet et') || 
+                userMessage.includes('chat') || userMessage.includes('konuşalım') ||
+                userMessage.includes('sohbet') || userMessage.includes('konuş')) {
+                
+                // Show loading screen
+                mainInterface.classList.add('hidden');
+                loadingScreen.classList.remove('hidden');
+                
+                // Start live chat instead of normal response
+                setTimeout(() => {
+                    startLiveChat();
+                }, 2000);
+                
+                return;
+            }
+            
+            // Normal response flow
+            // Show loading screen
+            mainInterface.classList.add('hidden');
+            loadingScreen.classList.remove('hidden');
+            
+            // Start hacking simulation
+            simulateHacking();
+            
+            // Random thinking message
+            const randomMessage = thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)];
+            thinkingText.classList.add('typing');
+            setTimeout(() => {
+                typeText(thinkingText, randomMessage);
+            }, 2000);
+            
+            // Show result after delay
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                resultScreen.classList.remove('hidden');
+                
+                // Determine response type based on probability
+                const randomChance = Math.random();
+                let selectedResponse;
+                
+                if (randomChance < 0.1) {
+                    // 10% chance - Direct redirect without showing response
+                    const randomSite = redirectSites[Math.floor(Math.random() * redirectSites.length)];
+                    
+                    // Show redirect message
+                    resultEmoji.textContent = '🚀';
+                    resultText.textContent = 'SURPRISE REDIRECT! Seni trolledim amına koyduğum! 😈';
+                    resultSignature.textContent = '- FlexBaba AI, sürpriz uzmanı';
+                    
+                    // Silent redirect
+                    setTimeout(() => {
+                        window.open(randomSite, '_blank');
+                    }, 2000);
+                    
+                } else if (randomChance < 0.4) {
+                    // 30% chance - Smart Troll response with redirect
+                    selectedResponse = generateSmartTrollResponse(userInput.value);
+                    resultEmoji.textContent = selectedResponse.emoji;
+                    resultText.textContent = selectedResponse.text;
+                    resultSignature.textContent = selectedResponse.signature;
+                    
+                    // Redirect after showing the troll message (silently)
+                    if (selectedResponse.action === 'redirect') {
+                        setTimeout(() => {
+                            window.open(selectedResponse.url, '_blank');
+                        }, 3000);
+                    }
+                    
+                } else {
+                    // 60% chance - Smart AI response (no redirect)
+                    selectedResponse = generateSmartAIResponse(userInput.value);
+                    resultEmoji.textContent = selectedResponse.emoji;
+                    resultText.textContent = selectedResponse.text;
+                    resultSignature.textContent = selectedResponse.signature;
+                }
+                
+                // Add some glitch effect to result
+                resultEmoji.classList.add('glitch');
+                setTimeout(() => resultEmoji.classList.remove('glitch'), 1000);
+                
+            }, 5000);
+        });
+        
+        resetBtn.addEventListener('click', () => {
+            resultScreen.classList.add('hidden');
+            mainInterface.classList.remove('hidden');
+            userInput.value = '';
+        });
+        
+        // Enter key support
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitBtn.click();
+            }
+        });
+        
+        // Rotating placeholder messages
+        const placeholderMessages = [
+            "Buraya soracağın soruyu veya komutları yazabilirsin... FlexBaba her şeyi hackleyebilir! 💀",
+            "'benimle konuş' yazarak canlı sohbet moduna geçebilirsin! 💬",
+            "Size yardımcı olmak için buradayım! Matematik, bilim, teknoloji... 🤖",
+            "'sohbet et' yazarak FlexBaba ile gerçek zamanlı konuşabilirsin! 🔥",
+            "FlexBaba AI - Tüm sorularınızın cevabını bulun (bazen küfürle)! 😈",
+            "'chat' yazarak canlı sohbet başlatabilirsin! Hazır mısın? ⚡",
+            "Matematik hesapla, genel bilgi sor, ya da sadece sohbet et! 🧠",
+            "FlexBaba her konuda yardım eder... Bazen de troll yapar! 🤡",
+            "Yapay zeka, hacking, oyunlar... Her şeyi konuşabiliriz! 💻",
+            "'konuşalım' yazarak FlexBaba'nın gerçek kişiliğini keşfet! 🎭",
+            "Sıkıldın mı? 'sohbet' yaz ve eğlence başlasın! 🎪",
+            "FlexBaba AI - Bazen yardımcı, bazen troll, her zaman eğlenceli! 🎲"
+        ];
+        
+        let currentPlaceholderIndex = 0;
+        
+        function rotatePlaceholder() {
+            const textarea = document.getElementById('userInput');
+            if (textarea) {
+                textarea.placeholder = placeholderMessages[currentPlaceholderIndex];
+                currentPlaceholderIndex = (currentPlaceholderIndex + 1) % placeholderMessages.length;
+            }
+        }
+        
+        // Start rotating placeholders every 3.5 seconds
+        setInterval(rotatePlaceholder, 3500);
+        
+        // Initialize matrix rain
+        createMatrixRain();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743675087f3db87',t:'MTc1NjA0NDMxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
