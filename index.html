@@ -2212,8 +2212,8 @@
             
             const breachSpan = document.getElementById('breachMsg');
             playGlitchSound();
-            await typeTextInElement(breachSpan, '🚨 INITIATING SYSTEM BREACH...', 40);
-            totalHackingTime += 1500;
+            await typeTextInElement(breachSpan, '🚨 INITIATING SYSTEM BREACH...', 25);
+            totalHackingTime += 800;
             
             // Add terminal corruption effect
             setTimeout(() => {
@@ -2224,8 +2224,8 @@
                 }, 300);
             }, 500);
             
-            await new Promise(resolve => setTimeout(resolve, 800));
-            totalHackingTime += 800;
+            await new Promise(resolve => setTimeout(resolve, 400));
+            totalHackingTime += 400;
             
             for (let commandIndex = 0; commandIndex < hackingCommands.length; commandIndex++) {
                 const div = document.createElement('div');
@@ -2255,7 +2255,7 @@
                     }, 250);
                 }, Math.random() * 1000 + 200);
                 
-                const typingTime = await typeTextInElement(commandSpan, hackingCommands[commandIndex], Math.random() * 15 + 20);
+                const typingTime = await typeTextInElement(commandSpan, hackingCommands[commandIndex], Math.random() * 8 + 12);
                 totalHackingTime += typingTime;
                 
                 // Add checkmark after command is typed with sound
@@ -2302,7 +2302,7 @@
                     const randomError = errorMessages[Math.floor(Math.random() * errorMessages.length)];
                     
                     playBeep(300, 200, 0.08); // Error sound
-                    const errorTypingTime = await typeTextInElement(errorSpan, randomError, 35);
+                    const errorTypingTime = await typeTextInElement(errorSpan, randomError, 20);
                     totalHackingTime += errorTypingTime;
                 }
                 
@@ -2324,12 +2324,12 @@
                     ];
                     const randomProgress = progressMessages[Math.floor(Math.random() * progressMessages.length)];
                     
-                    const progressTypingTime = await typeTextInElement(progressSpan, randomProgress, 25);
+                    const progressTypingTime = await typeTextInElement(progressSpan, randomProgress, 15);
                     totalHackingTime += progressTypingTime;
                 }
                 
                 // Variable delay between commands for more realistic feel
-                const commandDelay = Math.random() * 600 + 300;
+                const commandDelay = Math.random() * 300 + 150;
                 await new Promise(resolve => setTimeout(resolve, commandDelay));
                 totalHackingTime += commandDelay;
                 
@@ -2347,8 +2347,8 @@
             
             const completionSpan = document.getElementById('completionMsg');
             playTerminalBootSound();
-            await typeTextInElement(completionSpan, '🔓 SYSTEM BREACH COMPLETE - ANALYZING USER QUERY...', 35);
-            totalHackingTime += 2000;
+            await typeTextInElement(completionSpan, '🔓 SYSTEM BREACH COMPLETE - ANALYZING USER QUERY...', 20);
+            totalHackingTime += 1000;
             
             // Return total time for proper synchronization
             return totalHackingTime;
@@ -3033,5 +3033,5 @@
             }, 6500); // After terminal glitch appearance
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743bc72e500d5f3',t:'MTc1NjA0NzgwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9743cd89e15d71ee',t:'MTc1NjA0ODUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
